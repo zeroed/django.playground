@@ -35,7 +35,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djcelery',
     'playground',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,14 +62,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'production': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'foobardb',
-        'USER': 'foobaruser',
-        'PASSWORD': 'foobarpassword',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
+    # 'production': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'foobardb',
+    #     'USER': 'foobaruser',
+    #     'PASSWORD': 'foobarpassword',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '5432',
+    # }
 }
 
 # Internationalization
@@ -93,3 +95,8 @@ LANGUAGE_CODE =  'en-us'
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Celery config
+# http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND='djcelery.backends.cache:CacheBackend'
