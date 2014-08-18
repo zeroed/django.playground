@@ -53,7 +53,6 @@ ROOT_URLCONF = 'foobar.urls'
 
 WSGI_APPLICATION = 'foobar.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -87,16 +86,10 @@ USE_TZ = True
 
 FILE_CHARSET = 'utf-8'
 
-FIRST_DAY_OF_WEEK = 1 # monday
-
-LANGUAGE_CODE =  'en-us'
+# monday
+FIRST_DAY_OF_WEEK = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# Celery config
-# http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-CELERY_RESULT_BACKEND='djcelery.backends.cache:CacheBackend'
