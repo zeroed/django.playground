@@ -27,25 +27,27 @@ CELERY_DISABLE_RATE_LIMITS = True
 CELERY_RESULT_SERIALIZER = 'json'
 
 # use custom table names for the database result backend.
-APP_NAME = 'foobar'
+TABLE_APP_NAME = 'foobardb'
 CELERY_RESULT_DB_TABLENAMES = {
-    'task': APP_NAME + '_taskmeta',
-    'group': APP_NAME + '_groupmeta',
+    'task': TABLE_APP_NAME + '_taskmeta',
+    'group': TABLE_APP_NAME + '_groupmeta',
 }
 
 # echo enables verbose logging from SQLAlchemy.
 CELERY_RESULT_ENGINE_OPTIONS = {'echo': True}
 
 # If you have trubles with psycopg2 on windows... use linux
-# CELERY_RESULT_BACKEND = 'db+postgresql://postgres:postgres@localhost:5432/' + APP_NAME
+CELERY_RESULT_BACKEND = 'db+postgresql://dbuser:dbpassword@localhost:5432/' + TABLE_APP_NAME
 # ... and if you wanna a dirty trick:
 # CELERY_RESULT_BACKEND = 'db+sqlite:///' + os.path.join(BASE_DIR, 'results.sqlite3')
 
 # Django persistence
 # http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html
 # using-the-django-orm-cache-as-a-result-backend
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERY_CACHE_BACKEND = 'djcelery.backends.cache:CacheBackend'
+# For the database backend you must use:
+# CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+# For the cache backend you can use:
+# CELERY_RESULT_BACKEND = 'djcelery.backends.cache:CacheBackend'
 
 # AMQP persistence
 # http://docs.celeryproject.org/en/latest/configuration.html#amqp-backend-settings
@@ -68,7 +70,6 @@ CELERY_CACHE_BACKEND = 'djcelery.backends.cache:CacheBackend'
 #     'taskmeta_collection': 'my_taskmeta_collection',
 # }
 
-
 #: Only add pickle to this list if your broker is secured
 #: from unwanted access (see userguide/security.html)
 # using serializer name
@@ -79,11 +80,6 @@ CELERY_TASK_SERIALIZER = 'json'
 
 # Enables error emails.
 CELERY_SEND_TASK_ERROR_EMAILS = False
-
-# Name and email addresses of recipients
-ADMINS = (
-    ('Edoardo Rossi', 'admin@foobar.org'),
-)
 
 # Email address used as sender (From field).
 SERVER_EMAIL = 'no-reply@foobar.org'
