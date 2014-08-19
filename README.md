@@ -564,12 +564,26 @@ Configuration ->
 ```
 
 ----------------
+# Admin panel
+----------------
+
+Do not forget to start the `celerycam` to view the tasks status on your [admin page](http://localhost:8000/admin/djcelery/taskstate/):
+
+```
+$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO
+```
+
+Docs for [celerycam](http://docs.celeryproject.org/en/latest/history/changelog-2.1.html?highlight=celerycam#v210-news).
+
+
+----------------
 # Summary
 ----------------
 
 ```
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery -A foobar worker -l INFO -c 
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery -A foobar worker -l INFO -c 5 -E
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --app=foobar
 ```
