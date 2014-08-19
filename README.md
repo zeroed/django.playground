@@ -10,18 +10,73 @@
 
 - [PiP](https://pip.pypa.io/en/latest/index.html)
 
-    wget https://bootstrap.pypa.io/get-pip.py
-    python get-pip.py
-    sudo pip install Django
+    `wget https://bootstrap.pypa.io/get-pip.py`
+
+    `python get-pip.py`
+
+    `sudo pip install Django`
     
 - [Django 1.6.5](https://docs.djangoproject.com/en/1.6/)
 
-    pip install Django==1.6.5
-    python -c "import django; print(django.get_version())"
-    1.6.5
-    
+    `pip install Django==1.6.5`
+
+    `python -c "import django; print(django.get_version())"`
+
+    `1.6.5`
+
+    ```
+    eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py syncdb
+    Creating tables ...
+    Creating table django_admin_log
+    Creating table auth_permission
+    Creating table auth_group_permissions
+    Creating table auth_group
+    Creating table auth_user_groups
+    Creating table auth_user_user_permissions
+    Creating table auth_user
+    Creating table django_content_type
+    Creating table django_session
+    Creating table celery_taskmeta
+    Creating table celery_tasksetmeta
+    Creating table djcelery_intervalschedule
+    Creating table djcelery_crontabschedule
+    Creating table djcelery_periodictasks
+    Creating table djcelery_periodictask
+    Creating table djcelery_workerstate
+    Creating table djcelery_taskstate
+    Creating table playground_detector
+    Creating table playground_result
+
+    You just installed Django's auth system, which means you don't have any superusers defined.
+    Would you like to create one now? (yes/no): yes
+    Username (leave blank to use 'eddie'):
+    Email address:
+    Password:
+    Password (again):
+    Superuser created successfully.
+    Installing custom SQL ...
+    Installing indexes ...
+    Installed 0 object(s) from 0 fixture(s)
+    eddie@linuxbox:~/Workspace/django.playground$
+
+    ```
+
 - [PostgreSQL](http://www.postgresql.org) adapter: [PsycoPG stable release (2.5.3)](http://initd.org/psycopg)
 
+    Install:
+
+
+    on Linux:
+
+    ```
+    $ sudo service postgresql status|start|stop|restart
+
+    9.3/main (port 5432): online
+    ```
+
+    On Windows:
+
+    ```
     PS C:\WINDOWS\system32> net start postgresql-x64-9.3
     The postgresql-x64-9.3 - PostgreSQL Server 9.3 service is starting.
     The postgresql-x64-9.3 - PostgreSQL Server 9.3 service was started successfully.
@@ -29,31 +84,115 @@
     PS C:\WINDOWS\system32> net stop postgresql-x64-9.3
     The postgresql-x64-9.3 - PostgreSQL Server 9.3 service is stopping.
     The postgresql-x64-9.3 - PostgreSQL Server 9.3 service was stopped successfully.
+    ```
 
+    Configure PostgreSQL on Ubuntu:
+
+    [guide on help.ubuntu](https://help.ubuntu.com/community/PostgreSQL)
+
+    ```
+      sudo apt-get install postgresql
+      sudo apt-get install postgresql-client
+      sudo apt-get install postgresql postgresql-contrib
+      sudo apt-get install pgadmin3
+      sudo touch /var/lib/postgresql/.psql_history
+      sudo -u postgres psql postgres
+      sudo -u postgres createuser dbuser
+      sudo -u postgres createdb foobardb
+    eddie@linuxbox:~/Workspace/django.playground$ sudo -u postgres psql postgres
+    psql (9.3.5)
+    Type "help" for help.
+
+    postgres=# \password dbuser
+    postgres=# grant all privileges on database foobardb to dbuser;
+    GRANT
+    postgres=#
+    ```
+
+- [PsycoPG version 2.5.3](http://initd.org/psycopg/)
+
+    ```
     pip install psycopg2
-    
+    ```
+
 - [Celery: Distributed Task Queue](http://www.celeryproject.org/)
 
+    ```
     pip install -U Celery
         Successfully installed Celery billiard pytz kombu amqp anyjson
     pip install django-celery
         Successfully installed django-celery
+    ```
 
-    \pythonWorkspace\foobar> python ./manage.py celerycam
+- [Using CeleryCam](http://docs.celeryproject.org/en/latest/history/changelog-2.1.html?highlight=celerycam#v210-news)
+
+    ```
+    eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam
     -> evcam: Taking snapshots with djcelery.snapshot.Camera (every 1.0 secs.)
-    [2014-08-18 18:24:04,940: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+    [2014-08-19 10:27:47,558: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+    ```
 
 - [RabbitMQ 3.3.4](http://www.rabbitmq.com/)
-    
-    $ sudo apt-get install rabbitmq-server
-    PS C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.3.4\sbin> .\rabbitmq-plugins.bat enable rabbitmq_management
-    
     >>> BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-    
+
+    $ sudo apt-get install rabbitmq-server
+
+    eddie@linuxbox:~/Workspace/django.playground$ sudo rabbitmq-plugins enable rabbitmq_management
+    The following plugins have been enabled:
+      mochiweb
+      webmachine
+      rabbitmq_web_dispatch
+      amqp_client
+      rabbitmq_management_agent
+      rabbitmq_management
+    Plugin configuration has changed. Restart RabbitMQ for changes to take effect.
+    eddie@linuxbox:~/Workspace/django.playground$
+    eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server restart
+
     $ sudo rabbitmqctl add_user myuser mypassword
     $ sudo rabbitmqctl add_vhost myvhost
     $ sudo rabbitmqctl set_permissions -p myvhost myuser ".*" ".*" ".*"
-    $ sudo rabbitmqctl status    
+    ```
+    eddie@linuxbox:~/Workspace/django.playground$ sudo rabbitmqctl status
+    Status of node rabbit@linuxbox ...
+    [{pid,2092},
+     {running_applications,[{rabbit,"RabbitMQ","3.3.5"},
+                            {os_mon,"CPO  CXC 138 46","2.2.14"},
+                            {mnesia,"MNESIA  CXC 138 12","4.11"},
+                            {xmerl,"XML parser","1.3.5"},
+                            {sasl,"SASL  CXC 138 11","2.3.4"},
+                            {stdlib,"ERTS  CXC 138 10","1.19.4"},
+                            {kernel,"ERTS  CXC 138 10","2.16.4"}]},
+     {os,{unix,linux}},
+     {erlang_version,"Erlang R16B03 (erts-5.10.4) [source] [64-bit] [smp:4:4] [async-threads:30] [kernel-poll:true]\n"},
+     {memory,[{total,40898920},
+              {connection_procs,71696},
+              {queue_procs,14544},
+              {plugins,0},
+              {other_proc,13377200},
+              {mnesia,63920},
+              {mgmt_db,0},
+              {msg_index,31200},
+              {other_ets,771600},
+              {binary,5269296},
+              {code,16395458},
+              {atom,594537},
+              {other_system,4309469}]},
+     {alarms,[]},
+     {listeners,[{clustering,25672,"::"},{amqp,5672,"::"}]},
+     {vm_memory_high_watermark,0.4},
+     {vm_memory_limit,1610298163},
+     {disk_free_limit,50000000},
+     {disk_free,29136732160},
+     {file_descriptors,[{total_limit,924},
+                        {total_used,5},
+                        {sockets_limit,829},
+                        {sockets_used,3}]},
+     {processes,[{limit,1048576},{used,147}]},
+     {run_queue,0},
+     {uptime,9664}]
+    ...done.
+    ```
 
 - [SQLAlchemy 0.9.7](http://www.sqlalchemy.org/)
 
@@ -64,30 +203,26 @@
 # From shell
 ----------------
 
-    \pythonWorkspace\foobar> python .\manage.py runserver
-
-
-    Django version 1.6.5, using settings 'foobar.settings'
-    Starting development server at http://127.0.0.1:8000/
-    Quit the server with CTRL-BREAK.
-    [18/Aug/2014 15:14:28] "GET /admin/djcelery/ HTTP/1.1" 200 3899
-    [18/Aug/2014 15:14:30] "GET /admin/djcelery/workerstate/ HTTP/1.1" 200 2877
-    [18/Aug/2014 15:14:30] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
-    [18/Aug/2014 15:14:33] "GET /admin/djcelery/intervalschedule/ HTTP/1.1" 200 2914
-    [18/Aug/2014 15:14:33] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
-    [18/Aug/2014 15:14:34] "GET /admin/djcelery/taskstate/ HTTP/1.1" 200 4773
-    [18/Aug/2014 15:14:35] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
-    [18/Aug/2014 15:14:38] "GET /admin/djcelery/ HTTP/1.1" 200 3899
-    [18/Aug/2014 15:14:40] "GET /admin/djcelery/crontabschedule/ HTTP/1.1" 200 2908
-    [18/Aug/2014 15:14:40] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
-    [18/Aug/2014 15:14:42] "GET /admin/djcelery/ HTTP/1.1" 200 3899
+    ```
+    eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
     Validating models...
-    
+
     0 errors found
-    August 18, 2014 - 15:26:39
+    August 19, 2014 - 10:26:18
     Django version 1.6.5, using settings 'foobar.settings'
     Starting development server at http://127.0.0.1:8000/
-    Quit the server with CTRL-BREAK.
+    Quit the server with CONTROL-C.
+    [19/Aug/2014 10:26:28] "GET /admin/ HTTP/1.1" 200 1865
+    [19/Aug/2014 10:26:29] "POST /admin/ HTTP/1.1" 302 0
+    [19/Aug/2014 10:26:29] "GET /admin/ HTTP/1.1" 200 5103
+    [19/Aug/2014 10:26:32] "GET /admin/djcelery/taskstate/ HTTP/1.1" 200 4771
+    [19/Aug/2014 10:26:32] "GET /static/djcelery/style.css HTTP/1.1" 304 0
+    [19/Aug/2014 10:26:32] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
+    [19/Aug/2014 10:26:35] "GET /admin/djcelery/workerstate/ HTTP/1.1" 200 2875
+    [19/Aug/2014 10:26:35] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
+    [19/Aug/2014 10:26:38] "GET /admin/djcelery/crontabschedule/ HTTP/1.1" 200 2906
+    [19/Aug/2014 10:26:38] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
+    ```
 
 ----------------
 # From shell
@@ -102,28 +237,35 @@
 
 Playground
 
-    PS C:\Users\e.rossi\pythonWorkspace\foobar> python.exe .\manage.py sqlall playground
+    ```
+    eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py sqlall playground
+    ```
+
+    Result SQL:
+
+    ```sql
     BEGIN;
     CREATE TABLE "playground_detector" (
-        "id" integer NOT NULL PRIMARY KEY,
+        "id" serial NOT NULL PRIMARY KEY,
         "name" varchar(200) NOT NULL,
         "description" varchar(1000) NOT NULL,
-        "last_run_date" datetime NOT NULL,
+        "last_run_date" timestamp with time zone NOT NULL,
         "run_count" integer NOT NULL,
-        "creation_date" datetime NOT NULL
+        "creation_date" timestamp with time zone NOT NULL
     )
     ;
     CREATE TABLE "playground_result" (
-        "id" integer NOT NULL PRIMARY KEY,
-        "detector_id" integer NOT NULL REFERENCES "playground_detector" ("id"),
+        "id" serial NOT NULL PRIMARY KEY,
+        "detector_id" integer NOT NULL REFERENCES "playground_detector" ("id") DEFERRABLE INITIALLY DEFERRED,
         "content" varchar(1000) NOT NULL,
         "value" integer NOT NULL,
-        "creation_date" datetime NOT NULL
+        "creation_date" timestamp with time zone NOT NULL
     )
     ;
-    CREATE INDEX "playground_result_1141f28e" ON "playground_result" ("detector_id");
-    
+    CREATE INDEX "playground_result_detector_id" ON "playground_result" ("detector_id");
+
     COMMIT;
+    ```
 
 Celery (Django Celery)
 
