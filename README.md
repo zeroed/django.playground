@@ -11,9 +11,7 @@
 - [PiP](https://pip.pypa.io/en/latest/index.html)
 
     `wget https://bootstrap.pypa.io/get-pip.py`
-
     `python get-pip.py`
-
     `sudo pip install Django`
     
 - [Django 1.6.5](https://docs.djangoproject.com/en/1.6/)
@@ -63,10 +61,7 @@
 
 - [PostgreSQL](http://www.postgresql.org) adapter: [PsycoPG stable release (2.5.3)](http://initd.org/psycopg)
 
-    Install:
-
-
-    on Linux:
+    Install on Linux:
 
     ```
     $ sudo service postgresql status|start|stop|restart
@@ -109,6 +104,12 @@
     postgres=#
     ```
 
+    Getting the Admin console:
+
+    ```
+    eddie@linuxbox:~/Workspace/django.playground$ pgadmin3 &
+    ```
+
 - [PsycoPG version 2.5.3](http://initd.org/psycopg/)
 
     ```
@@ -133,8 +134,14 @@
     ```
 
 - [RabbitMQ 3.3.4](http://www.rabbitmq.com/)
-    >>> BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 
+    ```python
+    BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+    ```
+
+    Manage the service:
+
+    ```
     $ sudo apt-get install rabbitmq-server
 
     eddie@linuxbox:~/Workspace/django.playground$ sudo rabbitmq-plugins enable rabbitmq_management
@@ -147,11 +154,16 @@
       rabbitmq_management
     Plugin configuration has changed. Restart RabbitMQ for changes to take effect.
     eddie@linuxbox:~/Workspace/django.playground$
+
     eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server restart
 
     $ sudo rabbitmqctl add_user myuser mypassword
     $ sudo rabbitmqctl add_vhost myvhost
     $ sudo rabbitmqctl set_permissions -p myvhost myuser ".*" ".*" ".*"
+    ```
+
+    Check status and other stuff...
+
     ```
     eddie@linuxbox:~/Workspace/django.playground$ sudo rabbitmqctl status
     Status of node rabbit@linuxbox ...
@@ -196,33 +208,34 @@
 
 - [SQLAlchemy 0.9.7](http://www.sqlalchemy.org/)
 
+    ```
     pip install sqlalchemy
-
+    ```
 
 ----------------
 # From shell
 ----------------
 
-    ```
-    eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
-    Validating models...
+```
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
+Validating models...
 
-    0 errors found
-    August 19, 2014 - 10:26:18
-    Django version 1.6.5, using settings 'foobar.settings'
-    Starting development server at http://127.0.0.1:8000/
-    Quit the server with CONTROL-C.
-    [19/Aug/2014 10:26:28] "GET /admin/ HTTP/1.1" 200 1865
-    [19/Aug/2014 10:26:29] "POST /admin/ HTTP/1.1" 302 0
-    [19/Aug/2014 10:26:29] "GET /admin/ HTTP/1.1" 200 5103
-    [19/Aug/2014 10:26:32] "GET /admin/djcelery/taskstate/ HTTP/1.1" 200 4771
-    [19/Aug/2014 10:26:32] "GET /static/djcelery/style.css HTTP/1.1" 304 0
-    [19/Aug/2014 10:26:32] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
-    [19/Aug/2014 10:26:35] "GET /admin/djcelery/workerstate/ HTTP/1.1" 200 2875
-    [19/Aug/2014 10:26:35] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
-    [19/Aug/2014 10:26:38] "GET /admin/djcelery/crontabschedule/ HTTP/1.1" 200 2906
-    [19/Aug/2014 10:26:38] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
-    ```
+0 errors found
+August 19, 2014 - 10:26:18
+Django version 1.6.5, using settings 'foobar.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+[19/Aug/2014 10:26:28] "GET /admin/ HTTP/1.1" 200 1865
+[19/Aug/2014 10:26:29] "POST /admin/ HTTP/1.1" 302 0
+[19/Aug/2014 10:26:29] "GET /admin/ HTTP/1.1" 200 5103
+[19/Aug/2014 10:26:32] "GET /admin/djcelery/taskstate/ HTTP/1.1" 200 4771
+[19/Aug/2014 10:26:32] "GET /static/djcelery/style.css HTTP/1.1" 304 0
+[19/Aug/2014 10:26:32] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
+[19/Aug/2014 10:26:35] "GET /admin/djcelery/workerstate/ HTTP/1.1" 200 2875
+[19/Aug/2014 10:26:35] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
+[19/Aug/2014 10:26:38] "GET /admin/djcelery/crontabschedule/ HTTP/1.1" 200 2906
+[19/Aug/2014 10:26:38] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
+```
 
 ----------------
 # From shell
@@ -237,11 +250,11 @@
 
 Playground
 
-    ```
-    eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py sqlall playground
-    ```
+```
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py sqlall playground
+```
 
-    Result SQL:
+Result SQL:
 
     ```sql
     BEGIN;
