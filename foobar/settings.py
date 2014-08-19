@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+# Name and email addresses of recipients
+ADMINS = (
+    ('Edoardo Rossi', 'admin@foobar.org'),
+)
+
+MANAGERS = ADMINS
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -39,6 +46,9 @@ INSTALLED_APPS = (
     'playground',
 
 )
+
+import djcelery
+djcelery.setup_loader()
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -99,10 +109,3 @@ FIRST_DAY_OF_WEEK = 1
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# Name and email addresses of recipients
-ADMINS = (
-    ('Edoardo Rossi', 'admin@foobar.org'),
-)
-
-MANAGERS = ADMINS
