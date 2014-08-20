@@ -5,6 +5,9 @@ from django.utils import timezone
 
 
 class Detector(models.Model):
+    """
+    The single detector
+    """
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
     last_run_date = models.DateTimeField('last run date')
@@ -23,6 +26,9 @@ class Detector(models.Model):
 
 
 class Result(models.Model):
+    """
+    Map in some way the Detector's results
+    """
     detector = models.ForeignKey(Detector)
     content = models.CharField(max_length=1000)
     value = models.IntegerField(default=0)
@@ -36,3 +42,17 @@ class Result(models.Model):
             detector_name=self.detector.name,
             content=self.content
         )
+
+class Taskmeta(models.Model):
+    """
+    Get the results from the DB (raw) ...
+    """
+    id = models.IntegerField(primary_key=True)
+    task_id = models.CharField(unique=True, max_length=255, blank=True)
+    status = models.CharField(max_length=50, blank=True)
+    result = models.BinaryField(blank=True, null=True)
+    date_done = models.DateTimeField(blank=True, null=True)
+    traceback = models.TextField(blank=True)
+    class Meta:
+        managed = False
+        db_table = 'foobardb_taskmeta'
