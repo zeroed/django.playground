@@ -63,3 +63,6 @@ target/
 
 # PyCharm files
 .idea/
+
+# Celery files
+celerybeat-schedule
