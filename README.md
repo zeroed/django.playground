@@ -165,9 +165,8 @@
     pip install sqlalchemy
     ```
 
-----------------
-# From shell
-----------------
+## From shell
+
 
 ```
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
@@ -190,16 +189,16 @@ Quit the server with CONTROL-C.
 [19/Aug/2014 10:26:38] "GET /admin/jsi18n/ HTTP/1.1" 200 2344
 ```
 
-----------------
-# From shell
-----------------
+```
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py shell                                                                                       │    sqlsequencereset
+Python 3.4.0 (default, Apr 11 2014, 13:05:11)                                                                                                               │    startapp
+[GCC 4.8.2] on linux                                                                                                                                        │    startproject
+Type "help", "copyright", "credits" or "license" for more information.                                                                                      │    syncdb
+(InteractiveConsole)                                                                                                                                        │    test
+>>>                                                                                                                                                         │    testserver
+```
 
-    PS C:\Users\e.rossi\pythonWorkspace\foobar> python.exe .\manage.py sqlall
-    PS C:\Users\e.rossi\pythonWorkspace\foobar> python.exe .\manage.py shell
-
-----------------
-# SQLall
-----------------
+## SQLall
 
 Playground
 
@@ -346,13 +345,36 @@ CREATE INDEX "djcelery_taskstate_hidden" ON "djcelery_taskstate" ("hidden");
 COMMIT;
 ```
 
-----------------
-# RabbitMQ Service
-----------------
+## RabbitMQ Service
+
 
 On Linux:
 
 ```
+eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server status                                                                           │    celeryd_multi
+Status of node rabbit@linuxbox ...                                                                                                                          │    celerymon
+Error: unable to connect to node rabbit@linuxbox: nodedown                                                                                                  │    djcelerymon
+                                                                                                                                                            │
+DIAGNOSTICS                                                                                                                                                 │[sessions]
+===========                                                                                                                                                 │    clearsessions
+                                                                                                                                                            │
+attempted to contact: [rabbit@linuxbox]                                                                                                                     │[staticfiles]
+                                                                                                                                                            │    collectstatic
+rabbit@linuxbox:                                                                                                                                            │    findstatic
+  * connected to epmd (port 4369) on linuxbox                                                                                                               │    runserver
+  * epmd reports: node 'rabbit' not running at all                                                                                                          │eddie@linuxbox:~/Workspace/django.playground$ 
+                  no other nodes on linuxbox                                                                                                                │eddie@linuxbox:~/Workspace/django.playground$ 
+  * suggestion: start the node                                                                                                                              │eddie@linuxbox:~/Workspace/django.playground$ 
+                                                                                                                                                            │eddie@linuxbox:~/Workspace/django.playground$ 
+current node details:                                                                                                                                       │eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver                                                                                   
+- node name: rabbitmqctl8550@linuxbox                                                                                                                       │Validating models...
+- home dir: /var/lib/rabbitmq                                                                                                                               │
+- cookie hash: XDLsoUi+UetOP7SztXhjhw==                                                                                                                     │0 errors found
+                                                                                                                                                            │August 20, 2014 - 07:27:11
+eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server start                                                                            │Django version 1.6.5, using settings 'foobar.settings'
+ * Starting message broker rabbitmq-server                                                                                                                  │Starting development server at http://127.0.0.1:8000/
+   ...done.     
+
 eddie@linuxbox:~/Workspace/django.playground$ sudo rabbitmqctl status
 Status of node rabbit@linuxbox ...
 [{pid,2092},
@@ -434,7 +456,7 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery -A foobar
 - ** ---------- [config]
 - ** ---------- .> app:         foobar:0x7f57359a04e0
 - ** ---------- .> transport:   amqp://guest:**@localhost:5672//
-- ** ---------- .> results:     djcelery.backends.database:DatabaseBackend
+- ** ---------- .> results:     db+postgresql://dbuser:dbpassword@localhost:5432/foobardb
 - *** --- * --- .> concurrency: 5 (prefork)
 -- ******* ---- 
 --- ***** ----- [queues]
@@ -563,9 +585,7 @@ Configuration ->
 [2014-08-19 14:29:18,839: INFO/MainProcess] beat: Starting...
 ```
 
-----------------
-# Admin panel
-----------------
+## Admin panel
 
 Do not forget to start the `celerycam` to view the tasks status on your [admin page](http://localhost:8000/admin/djcelery/taskstate/):
 
@@ -575,15 +595,59 @@ $ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO
 
 Docs for [celerycam](http://docs.celeryproject.org/en/latest/history/changelog-2.1.html?highlight=celerycam#v210-news).
 
+## Check if everything is up 'n' running
 
-----------------
-# Summary
-----------------
+```
+eddie@linuxbox:~/Workspace/django.playground$ sudo service postgresql status
+9.3/main (port 5432): online
+
+eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server status
+Status of node rabbit@linuxbox ...
+[{pid,8659},
+ {running_applications,
+     [{rabbitmq_management,"RabbitMQ Management Console","3.3.5"},
+      {rabbitmq_web_dispatch,"RabbitMQ Web Dispatcher","3.3.5"},
+      {webmachine,"webmachine","1.10.3-rmq3.3.5-gite9359c7"},
+      {mochiweb,"MochiMedia Web Server","2.7.0-rmq3.3.5-git680dba8"},
+      {rabbitmq_management_agent,"RabbitMQ Management Agent","3.3.5"},
+      {rabbit,"RabbitMQ","3.3.5"},
+      {os_mon,"CPO  CXC 138 46","2.2.14"},
+      {inets,"INETS  CXC 138 49","5.9.7"},
+      {mnesia,"MNESIA  CXC 138 12","4.11"},
+      {amqp_client,"RabbitMQ AMQP Client","3.3.5"},
+      {xmerl,"XML parser","1.3.5"},
+      {sasl,"SASL  CXC 138 11","2.3.4"},
+      {stdlib,"ERTS  CXC 138 10","1.19.4"},
+      {kernel,"ERTS  CXC 138 10","2.16.4"}]},
+ ...
+ 
+ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar &
+[1] 9301
+eddie@linuxbox:~/Workspace/django.playground$ celery beat v3.1.13 (Cipater) is starting.
+__    -    ... __   -        _
+Configuration ->
+    . broker -> amqp://guest:**@localhost:5672//
+    . loader -> celery.loaders.app.AppLoader
+    . scheduler -> celery.beat.PersistentScheduler
+    . db -> celerybeat-schedule
+    . logfile -> [stderr]@%INFO
+    . maxinterval -> now (0s)
+[2014-08-20 07:49:59,796: INFO/MainProcess] beat: Starting...
+
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO &
+[2] 9315
+eddie@linuxbox:~/Workspace/django.playground$ -> evcam: Taking snapshots with djcelery.snapshot.Camera (every 1.0 secs.)
+[2014-08-20 07:50:16,650: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+eddie@linuxbox:~/Workspace/django.playground$
+
+```
+
+## tl;dr    
 
 ```
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery -A foobar worker -l INFO -c 5 -E
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --app=foobar
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery --app=foobar worker -l INFO -c 5 -E 
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//'
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar --broker='amqp://guest:guest@localhost:5672//' --max-interval=1
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --app=foobar
 ```
