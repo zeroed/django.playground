@@ -10,6 +10,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # RabbitMQ is the default broker
 BROKER_URL = "amqp://guest:guest@localhost:5672//"
 
+# List of modules to import when celery starts.
+# CELERY_IMPORTS = ("playground.tasks", )
+
+CELERY_ANNOTATIONS = {"tasks.add": {"rate_limit": "10/s"}}
+
 # http://docs.celeryproject.org/en/latest/userguide/tasks.html#disable-rate-limits-if-they-re-not-used
 CELERY_DISABLE_RATE_LIMITS = True
 
@@ -35,6 +40,9 @@ CELERY_RESULT_DB_TABLENAMES = {
 
 # echo enables verbose logging from SQLAlchemy.
 CELERY_RESULT_ENGINE_OPTIONS = {'echo': True}
+
+## Using the database to store task state and results.
+# CELERY_RESULT_BACKEND = "database"
 
 # If you have trubles with psycopg2 on windows... use linux
 CELERY_RESULT_BACKEND = 'db+postgresql://dbuser:dbpassword@localhost:5432/' + TABLE_APP_NAME
@@ -94,6 +102,4 @@ CELERY_ROUTES = {
     'tasks.add': 'low-priority',
 }
 
-CELERY_ANNOTATIONS = {
-    # 'tasks.add': {'rate_limit': '10/s'}
-}
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
