@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from django.contrib import admin
+from playground.models import Detector
+from playground.models import Result
+
+admin.site.register(Detector)
+admin.site.register(Result)
