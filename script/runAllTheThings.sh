@@ -6,7 +6,7 @@ cd ~/Workspace/django.playground
 python3 manage.py runserver
 
 # eddie@linuxbox:~/Workspace/django.playground$
-python3 manage.py celery --app=foobar worker -l INFO --concurrency=5 --events --pidfile=pids/celerd.pid --logfile=logs/celeryd.log --broker='amqp://guest:guest@localhost:5672//' --heartbeat-interval=5 --detach
+python3 manage.py celery --app=foobar worker -l INFO --concurrency=5 --events --pidfile=pids/celeryd.pid --logfile=logs/celeryd.log --broker='amqp://guest:guest@localhost:5672//' --heartbeat-interval=5 --detach
 
 # eddie@linuxbox:~/Workspace/django.playground$
 # tail -f logs/celery.log
