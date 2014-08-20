@@ -44,7 +44,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'djcelery',
     'playground',
-
 )
 
 import djcelery
@@ -67,22 +66,22 @@ WSGI_APPLICATION = 'foobar.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
-    'development': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'USER': '', # Not used with sqlite3.
-        'PASSWORD': '', # Not used with sqlite3.
-        'HOST': '', # Set to empty string for localhost.
-        # Not used with sqlite3.
-        'PORT': '', # Set to empty string for default.
-        # Not used with sqlite3.
-        },
+    # 'development': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     'USER': '', # Not used with sqlite3.
+    #     'PASSWORD': '', # Not used with sqlite3.
+    #     'HOST': '', # Set to empty string for localhost.
+    #     # Not used with sqlite3.
+    #     'PORT': '', # Set to empty string for default.
+    #     # Not used with sqlite3.
+    #     },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'foobardb',
         'USER': 'dbuser',
         'PASSWORD': 'dbpassword',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
