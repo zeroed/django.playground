@@ -651,3 +651,13 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verb
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar --broker='amqp://guest:guest@localhost:5672//' --max-interval=1
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --app=foobar
 ```
+
+## Screenshot Or It Didn't Happen
+
+![Screenshot](screenshots/00.png)
+![Screenshot](screenshots/01.png)
+![Screenshot](screenshots/02.png)
+![Screenshot](screenshots/03.png)
+![Screenshot](screenshots/04.png)
+![Screenshot](screenshots/05.png)
+![Screenshot](screenshots/06.png)
