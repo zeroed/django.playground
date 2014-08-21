@@ -1,7 +1,9 @@
 # Create your models here.
 import datetime
-from django.db import models
+from django.db import models, IntegrityError
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.db import transaction
 
 
 class Detector(models.Model):
@@ -24,13 +26,29 @@ class Detector(models.Model):
             last_run=self.last_run_date
         )
 
-    @staticmethod
-    def get_mock():
-        obj, created = Detector.objects.get_or_create(
-            name='Mock',
-            description='Mock Detector'
-        )
-        return obj
+    @classmethod
+    @transaction.atomic
+    def get_mock(cls):
+        try:
+            # https://docs.djangoproject.com/en/1.6/releases/1.6.3/#select-for-update-requires-a-transaction
+            with transaction.atomic():
+                detector_found_or_created = Detector.objects.select_for_update().filter(name='Mock').first()
+                if not detector_found_or_created:
+                    detector_found_or_created = Detector.objects.create(
+                        name='Mock',
+                        description='Mock Detector'
+                    )
+                return detector_found_or_created
+        except IntegrityError:
+            print('fuuuuuuuuuuuuuuuuuuuu')
+
+
+    def update_last_running_time_and_counter(self):
+        self.full_clean()
+        self.last_run_date = datetime.datetime.utcnow()
+        self.run_count += 1
+        self.save()
+        return self
 
 
 class Result(models.Model):
