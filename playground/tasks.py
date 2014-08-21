@@ -23,12 +23,13 @@ def slow_add(x, y):
     try:
         d = random.randint(1, 30)
         time.sleep(d)
-        logger.info('Adding {0} + {1} with delay {2}'.format(x, y, d))
-        result = Result()
-        result.content = "Meh... done I think"
-        result.value = x + y
-        result.detector = Detector.objects.get(id=1)
-        result.creation_date = datetime.datetime.now()
+        result = Result(
+            content='Adding {0} + {1} with delay {2}'.format(x, y, d),
+            value=(x + y),
+            detector=Detector.get_mock(),
+            created_at=datetime.datetime.utcnow(),
+            duration=d
+        )
         result.save()
         return result.value
     except Exception as exc:
