@@ -638,8 +638,40 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verb
 [2] 9315
 eddie@linuxbox:~/Workspace/django.playground$ -> evcam: Taking snapshots with djcelery.snapshot.Camera (every 1.0 secs.)
 [2014-08-20 07:50:16,650: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
-eddie@linuxbox:~/Workspace/django.playground$
+```
 
+Check the Celery status:
+
+```
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery report
+
+software -> celery:3.1.13 (Cipater) kombu:3.0.21 py:3.4.0
+            billiard:3.3.0.18 py-amqp:1.4.6
+platform -> system:Linux arch:64bit, ELF imp:CPython
+loader   -> celery.loaders.app.AppLoader
+settings -> transport:amqp results:db+postgresql://dbuser:dbpassword@localhost:5432/foobardb
+
+EMAIL_PORT: 25
+EMAIL_HOST: 'mail.foobar.org'
+CELERY_RESULT_DB_TABLENAMES: {
+ 'group': 'foobardb_groupmeta', 'task': 'foobardb_taskmeta'}
+CELERY_RESULT_ENGINE_OPTIONS: {
+ 'echo': True}
+SERVER_EMAIL: 'no-reply@foobar.org'
+CELERY_ROUTES: {
+ 'tasks.add': 'low-priority'}
+CELERY_RESULT_SERIALIZER: 'json'
+CELERY_DISABLE_RATE_LIMITS: True
+CELERY_ACCEPT_CONTENT: ['json']
+BASE_DIR: '/home/eddie/Workspace/django.playground'
+TABLE_APP_NAME: 'foobardb'
+CELERY_ANNOTATIONS: {
+ 'tasks.add': {'rate_limit': '10/s'}}
+CELERY_SEND_TASK_ERROR_EMAILS: False
+CELERY_RESULT_BACKEND: 'db+postgresql://dbuser:dbpassword@localhost:5432/foobardb'
+CELERY_TASK_SERIALIZER: 'json'
+CELERYBEAT_SCHEDULER: 'djcelery.schedulers.DatabaseScheduler'
+BROKER_URL: 'amqp://guest:********@localhost:5672//'
 ```
 
 ## tl;dr
