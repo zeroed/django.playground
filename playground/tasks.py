@@ -22,11 +22,12 @@ def add(x, y):
 def slow_add(x, y):
     try:
         d = random.randint(1, 30)
+        detector_in_charge = Detector.get_mock().update_last_running_time_and_counter()
         time.sleep(d)
         result = Result(
             content='Adding {0} + {1} with delay {2}'.format(x, y, d),
             value=(x + y),
-            detector=Detector.get_mock(),
+            detector=detector_in_charge,
             created_at=datetime.datetime.utcnow(),
             duration=d
         )
