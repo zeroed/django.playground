@@ -9,10 +9,10 @@ class Detector(models.Model):
     The single detector
     """
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=1000)
-    last_run_date = models.DateTimeField('last run date')
+    description = models.CharField(max_length=1000, default=None, blank=True, null=True)
+    last_run_date = models.DateTimeField('last run date', default=None, blank=True, null=True)
     run_count = models.IntegerField('run count', default=0)
-    creation_date = models.DateTimeField('date published')
+    created_at = models.DateTimeField('date created', default=datetime.datetime.utcnow())
 
     def was_runned_recently(self):
         return self.last_run_date >= timezone.now() - datetime.timedelta(hours=1)
@@ -24,6 +24,14 @@ class Detector(models.Model):
             last_run=self.last_run_date
         )
 
+    @staticmethod
+    def get_mock():
+        obj, created = Detector.objects.get_or_create(
+            name='Mock',
+            description='Mock Detector'
+        )
+        return obj
+
 
 class Result(models.Model):
     """
@@ -32,7 +40,9 @@ class Result(models.Model):
     detector = models.ForeignKey(Detector)
     content = models.CharField(max_length=1000)
     value = models.IntegerField(default=0)
-    creation_date = models.DateTimeField('date published')
+    created_at = models.DateTimeField('creation date')
+    processed = models.BooleanField(default=False)
+    duration = models.IntegerField('seconds of processing', default=0)
 
     def was_created_recently(self):
         return self.creation_date >= timezone.now() - datetime.timedelta(hours=1)
@@ -42,6 +52,7 @@ class Result(models.Model):
             detector_name=self.detector.name,
             content=self.content
         )
+
 
 class Taskmeta(models.Model):
     """
