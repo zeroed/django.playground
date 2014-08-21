@@ -22,16 +22,15 @@ def add(x, y):
 def slow_add(x, y):
     try:
         d = random.randint(1, 30)
-        detector_in_charge = Detector.get_mock().update_last_running_time_and_counter()
-        time.sleep(d)
-        result = Result(
+        detector_in_charge = Detector.get_mock()
+        computation_result = detector_in_charge.do_somethin(x, y, d)
+        result = Result.create(
             content='Adding {0} + {1} with delay {2}'.format(x, y, d),
-            value=(x + y),
+            value=computation_result,
             detector=detector_in_charge,
             created_at=datetime.datetime.utcnow(),
             duration=d
         )
-        result.save()
         return result.value
     except Exception as exc:
         slow_add.retry(exc=exc, countdown=10)
