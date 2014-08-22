@@ -61,6 +61,15 @@
     Installed 0 object(s) from 0 fixture(s)
     eddie@linuxbox:~/Workspace/django.playground$
     ```
+    
+- [django-extensions/django-extensions](https://github.com/django-extensions/django-extensions)
+
+    Can you seriously code without `python3 manage.py shell_plus --use-pythonrc` ? :hearts:
+
+    ```
+    $ pip install django-extensions
+    ```
+    
 
 - [PostgreSQL](http://www.postgresql.org) adapter: [PsycoPG stable release (2.5.3)](http://initd.org/psycopg)
 
@@ -686,6 +695,14 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l I
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --app=foobar
 ```
 
+## Run a sample
+
+Put 3 (let's do three) jobs on queue...
+
+```
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runscript delay --script-args=3
+```
+
 ## Screenshot Or It Didn't Happen
 
 ![Screenshot](screenshots/00.png)
@@ -695,3 +712,11 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --
 ![Screenshot](screenshots/04.png)
 ![Screenshot](screenshots/05.png)
 ![Screenshot](screenshots/06.png)
+
+## When the sh\*\* hits the fan
+
+```python
+import pdb; pdb.set_trace()
+```
+
+[source SO](http://stackoverflow.com/questions/1118183/how-to-debug-in-django-the-good-way/1118271#1118271)
