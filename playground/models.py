@@ -3,7 +3,6 @@ import time
 import datetime
 from django.db import models, IntegrityError
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 from django.db import transaction
 
 
@@ -78,18 +77,3 @@ class Result(models.Model):
             detector_name=self.detector.name,
             content=self.content
         )
-
-
-class Taskmeta(models.Model):
-    """
-    Get the results from the DB (raw) ...
-    """
-    id = models.IntegerField(primary_key=True)
-    task_id = models.CharField(unique=True, max_length=255, blank=True)
-    status = models.CharField(max_length=50, blank=True)
-    result = models.BinaryField(blank=True, null=True)
-    date_done = models.DateTimeField(blank=True, null=True)
-    traceback = models.TextField(blank=True)
-    class Meta:
-        managed = False
-        db_table = 'foobardb_taskmeta'
