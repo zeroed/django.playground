@@ -61,6 +61,15 @@
     Installed 0 object(s) from 0 fixture(s)
     eddie@linuxbox:~/Workspace/django.playground$
     ```
+    
+- [django-extensions/django-extensions](https://github.com/django-extensions/django-extensions)
+
+    Can you seriously code without `python3 manage.py shell_plus --use-pythonrc` ? :hearts:
+
+    ```
+    $ pip install django-extensions
+    ```
+    
 
 - [PostgreSQL](http://www.postgresql.org) adapter: [PsycoPG stable release (2.5.3)](http://initd.org/psycopg)
 
@@ -638,16 +647,76 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verb
 [2] 9315
 eddie@linuxbox:~/Workspace/django.playground$ -> evcam: Taking snapshots with djcelery.snapshot.Camera (every 1.0 secs.)
 [2014-08-20 07:50:16,650: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
-eddie@linuxbox:~/Workspace/django.playground$
-
 ```
 
-## tl;dr    
+Check the Celery status:
+
+```
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery report
+
+software -> celery:3.1.13 (Cipater) kombu:3.0.21 py:3.4.0
+            billiard:3.3.0.18 py-amqp:1.4.6
+platform -> system:Linux arch:64bit, ELF imp:CPython
+loader   -> celery.loaders.app.AppLoader
+settings -> transport:amqp results:db+postgresql://dbuser:dbpassword@localhost:5432/foobardb
+
+EMAIL_PORT: 25
+EMAIL_HOST: 'mail.foobar.org'
+CELERY_RESULT_DB_TABLENAMES: {
+ 'group': 'foobardb_groupmeta', 'task': 'foobardb_taskmeta'}
+CELERY_RESULT_ENGINE_OPTIONS: {
+ 'echo': True}
+SERVER_EMAIL: 'no-reply@foobar.org'
+CELERY_ROUTES: {
+ 'tasks.add': 'low-priority'}
+CELERY_RESULT_SERIALIZER: 'json'
+CELERY_DISABLE_RATE_LIMITS: True
+CELERY_ACCEPT_CONTENT: ['json']
+BASE_DIR: '/home/eddie/Workspace/django.playground'
+TABLE_APP_NAME: 'foobardb'
+CELERY_ANNOTATIONS: {
+ 'tasks.add': {'rate_limit': '10/s'}}
+CELERY_SEND_TASK_ERROR_EMAILS: False
+CELERY_RESULT_BACKEND: 'db+postgresql://dbuser:dbpassword@localhost:5432/foobardb'
+CELERY_TASK_SERIALIZER: 'json'
+CELERYBEAT_SCHEDULER: 'djcelery.schedulers.DatabaseScheduler'
+BROKER_URL: 'amqp://guest:********@localhost:5672//'
+```
+
+## tl;dr
+
+If you don't want to look at `runAllTheThings.sh` you can do this:
 
 ```
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery --app=foobar worker -l INFO -c 5 -E 
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//'
-eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar --broker='amqp://guest:guest@localhost:5672//' --max-interval=1
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery --app=foobar worker -l INFO --concurrency=5 --events --heartbeat-interval=5 --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celeryd.pid --logfile=logs/celeryd.log --detach
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celeryev.pid --logfile=logs/celeryev.log --detach
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar --max-interval=1 --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celerybeat.pid --logfile=logs/celerybeat.log --detach
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --app=foobar
 ```
+
+## Run a sample
+
+Put 3 (let's do three) jobs on queue...
+
+```
+eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runscript delay --script-args=3
+```
+
+## Screenshot Or It Didn't Happen
+
+![Screenshot](screenshots/00.png)
+![Screenshot](screenshots/01.png)
+![Screenshot](screenshots/02.png)
+![Screenshot](screenshots/03.png)
+![Screenshot](screenshots/04.png)
+![Screenshot](screenshots/05.png)
+![Screenshot](screenshots/06.png)
+
+## When the sh\*\* hits the fan
+
+```python
+import pdb; pdb.set_trace()
+```
+
+[source SO](http://stackoverflow.com/questions/1118183/how-to-debug-in-django-the-good-way/1118271#1118271)

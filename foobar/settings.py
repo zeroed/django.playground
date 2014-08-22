@@ -20,6 +20,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+VERSION = '0.1'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
