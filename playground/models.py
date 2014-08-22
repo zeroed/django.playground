@@ -4,6 +4,7 @@ import datetime
 from django.db import models, IntegrityError
 from django.utils import timezone
 from django.db import transaction
+from django.utils.timezone import utc
 
 
 class Detector(models.Model):
@@ -17,7 +18,7 @@ class Detector(models.Model):
     created_at = models.DateTimeField('date created', default=datetime.datetime.utcnow())
 
     def was_runned_recently(self):
-        return self.last_run_date >= timezone.now() - datetime.timedelta(hours=1)
+        return self.last_run_date >= timezone.now().replace(tzinfo=utc) - datetime.timedelta(hours=1)
 
     def __str__(self):
         return 'Detector {name}, "{description}" - last run: {last_run}'.format(
@@ -70,7 +71,7 @@ class Result(models.Model):
     duration = models.IntegerField('seconds of processing', default=0)
 
     def was_created_recently(self):
-        return self.creation_date >= timezone.now() - datetime.timedelta(hours=1)
+        return self.creation_date >= timezone.now().replace(tzinfo=utc) - datetime.timedelta(hours=1)
 
     def __str__(self):
         return 'Result from {detector_name} is {content}'.format(
