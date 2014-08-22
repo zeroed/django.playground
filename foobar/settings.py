@@ -111,3 +111,7 @@ FIRST_DAY_OF_WEEK = 1
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+TEMPLATE_DIRS = {
+    'templates/',
+}
