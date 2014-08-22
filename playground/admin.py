@@ -2,12 +2,9 @@ from django.contrib import admin
 from django.utils.http import urlquote
 from playground.models import Detector
 from playground.models import Result
-from playground.models import Taskmeta
 from playground.tasks import slow_add
 import random
 
-
-admin.site.register(Taskmeta)
 
 """
 Relevant Docs:
@@ -68,3 +65,22 @@ class ResultAdmin(admin.ModelAdmin):
     readonly_fields = [detector_link, 'content', 'detector', 'value', 'duration', 'created_at']
 
 admin.site.register(Result, ResultAdmin)
+
+#
+# from playground.models import Taskmeta
+#
+# admin.site.register(Taskmeta)
+#
+# class Taskmeta(models.Model):
+#     """
+#     Get the results from the DB (raw) ...
+#     """
+#     id = models.IntegerField(primary_key=True)
+#     task_id = models.CharField(unique=True, max_length=255, blank=True)
+#     status = models.CharField(max_length=50, blank=True)
+#     result = models.BinaryField(blank=True, null=True)
+#     date_done = models.DateTimeField(blank=True, null=True)
+#     traceback = models.TextField(blank=True)
+#     class Meta:
+#         managed = False
+#         db_table = 'foobardb_taskmeta'
