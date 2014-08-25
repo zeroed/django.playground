@@ -7,6 +7,7 @@
 - [Python 3.4.1 (Docs)](https://docs.python.org/3/)
 
     ... install Python in a way that you like... I don't care ...
+    Also use [Virtualenv 1.11.6](http://virtualenv.readthedocs.org/en/latest/virtualenv.htm)
 
 - [PiP](https://pip.pypa.io/en/latest/index.html)
 
@@ -16,12 +17,12 @@
     $ sudo pip install Django
     ```
     
-- [Django 1.6.5](https://docs.djangoproject.com/en/1.6/)
+- [Django 1.6.6](https://docs.djangoproject.com/en/1.6/)
 
     ```
-    pip install Django==1.6.5
+    pip install Django==1.6.6
     python -c "import django; print(django.get_version())"
-    > 1.6.5
+    > 1.6.6
     ```
 
     Do something...
