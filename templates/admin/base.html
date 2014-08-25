@@ -18,42 +18,42 @@
 <div id="container">
 
     {% if not is_popup %}
-    <!-- Header -->
-    <div id="header">
-        <div id="branding">
-        {% block branding %}{% endblock %}
+        <!-- Header -->
+        <div id="header">
+            <div id="branding">
+            {% block branding %}{% endblock %}
+            </div>
+            {% if user.is_active and user.is_staff %}
+            <div id="user-tools">
+                {% trans 'Welcome,' %}
+                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+                {% block userlinks %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+                    {% endif %}
+                    {% if user.has_usable_password %}
+                    <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                    {% endif %}
+                    <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+                {% endblock %}
+            </div>
+            {% endif %}
+            {% block nav-global %}{% endblock %}
         </div>
-        {% if user.is_active and user.is_staff %}
-        <div id="user-tools">
-            {% trans 'Welcome,' %}
-            <strong>{% firstof user.get_short_name user.get_username %}</strong>.
-            {% block userlinks %}
-                {% url 'django-admindocs-docroot' as docsroot %}
-                {% if docsroot %}
-                    <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
-                {% endif %}
-                {% if user.has_usable_password %}
-                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
-                {% endif %}
-                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
-            {% endblock %}
-        </div>
-        {% endif %}
-        {% block nav-global %}{% endblock %}
-    </div>
-    <!-- END Header -->
-    {% block breadcrumbs %}
-    <div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    {% if title %} &rsaquo; {{ title }}{% endif %}
-    </div>
-    {% endblock %}
+        <!-- END Header -->
+        {% block breadcrumbs %}
+            <div class="breadcrumbs">
+            <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+            {% if title %} &rsaquo; {{ title }}{% endif %}
+            </div>
+        {% endblock %}
     {% endif %}
 
     {% block messages %}
         {% if messages %}
         <ul class="messagelist">{% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+          <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
         {% endfor %}</ul>
         {% endif %}
     {% endblock messages %}
@@ -71,6 +71,22 @@
     </div>
     <!-- END Content -->
 
+    {% block job_controls %}
+            <div>
+                <div>
+                    <p>
+                        Meh, I'm here to stay! {{ version }}
+                    </p>
+                </div>
+                <div >
+                    <ul >
+                        <li><a href="../merge/">Merge to another</a></li>
+                        <li><a href="/test/">Show the test page</a></li>
+                        <li><a href="/playground/test_schedule/">Run some test task</a></li>
+                    </ul>
+                </div>
+            </div>
+    {% endblock %}
     {% block footer %}<div id="footer"></div>{% endblock %}
 </div>
 <!-- END Container -->
