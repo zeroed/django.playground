@@ -12,6 +12,21 @@ https://docs.djangoproject.com/en/dev/ref/contrib/admin/
 """
 
 
+#
+# http://stackoverflow.com/questions/12321130/how-to-override-django-admins-views/12322030#12322030
+#
+# from django.contrib.admin import AdminSite
+# from django.views.decorators.cache import never_cache
+#
+# class MyAdminSite(AdminSite):
+#     @never_cache
+#     def index(self, request, extra_context=None):
+#         # do stuff
+#         return "foo"
+#
+# admin_site = MyAdminSite()
+
+
 def make_processed(modeladmin, request, queryset):
     queryset.update(status='p')
 
@@ -66,21 +81,8 @@ class ResultAdmin(admin.ModelAdmin):
 
 admin.site.register(Result, ResultAdmin)
 
-#
-# from playground.models import Taskmeta
-#
-# admin.site.register(Taskmeta)
-#
-# class Taskmeta(models.Model):
-#     """
-#     Get the results from the DB (raw) ...
-#     """
-#     id = models.IntegerField(primary_key=True)
-#     task_id = models.CharField(unique=True, max_length=255, blank=True)
-#     status = models.CharField(max_length=50, blank=True)
-#     result = models.BinaryField(blank=True, null=True)
-#     date_done = models.DateTimeField(blank=True, null=True)
-#     traceback = models.TextField(blank=True)
-#     class Meta:
-#         managed = False
-#         db_table = 'foobardb_taskmeta'
+
+# https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#other-methods
+# https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#django.contrib.admin.ModelAdmin.changelist_view
+# https://docs.djangoproject.com/en/1.6/ref/contrib/admin/actions/#making-actions-available-site-wide
+
