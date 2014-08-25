@@ -8,6 +8,8 @@
 
     ... install Python in a way that you like... I don't care ...
     Also use [Virtualenv 1.11.6](http://virtualenv.readthedocs.org/en/latest/virtualenv.htm)
+    
+    `eddie@linuxbox:~/Workspace/django.playground$ source playground.env/bin/activate`
 
 - [PiP](https://pip.pypa.io/en/latest/index.html)
 
