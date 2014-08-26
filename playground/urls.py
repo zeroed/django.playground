@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^test/$', views.test, name='test'),
     url(r'^test_schedule/$', views.test_schedule, name='test_schedule'),
+
     # url(r'^startjob/$', 'playground.core.startjob'),
     # url(r'^showjob/$', 'playground.core.showjob'),
     # url(r'^rmjob/$', 'playground.core.rmjob'),
