@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Test Schedule</title>
+</head>
+<body>
+<div>
+    Something: {{ result }}.
+</div>
+<div>
+    <form action="/test_schedule/" method="post">
+        <label for="your_name">Your name: </label>
+        <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
+        <input type="submit" value="OK">
+    </form>
+</div>
+<div>
+    {% if task_list %}
+    <ul>
+    {% for task in latest_task_list %}
+        <li><a href="/admin/djcelery/taskstate/{{ task.id }}/">{{ task.id }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No tasks are available (yet).</p>
+{% endif %}
+</div>
+</body>
+</html>
