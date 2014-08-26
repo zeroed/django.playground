@@ -10,10 +10,12 @@ def get_task_id_from_uuid(uuid):
     http://initd.org/psycopg/docs/usage.html#the-problem-with-the-query-parameters
 
     :param uuid:
-    :return:
+    :return: [id, uuid]
     """
     cursor = connection.cursor()
     sql = "SELECT id, task_id FROM djcelery_taskstate WHERE task_id = %s;"
     data = (uuid, )
     cursor.execute(sql, data)
-    return cursor.fetchone()
+    result = cursor.fetchone()
+    print('\n======\n%s || %s || %s\n=========\n' % (sql, data, result))
+    return result
