@@ -1,14 +1,24 @@
-from tempfile import mkstemp
-from os import fdopen, unlink, kill
-from subprocess import Popen
-import signal
+import random
+import time
 from django.http import HttpResponse
+from django.template import RequestContext, loader
 from django.http import HttpResponseRedirect
 from datetime import datetime
+from celery.utils.log import get_task_logger
+from playground.forms import RunTaskForm
+from playground.tasks import slow_add
+from django.http import Http404
+from django.template import TemplateDoesNotExist
+from playground.custom import get_task_id_from_uuid
+
+# import tempfile import mkstemp
+# from os import fdopen, unlink, kill
+# from subprocess import Popen
+# import signal
 # import scripts
 
 # Create your core here.
-
+logger = get_task_logger(__name__)
 
 def index(request):
     """
@@ -32,9 +42,36 @@ def test(request):
 
 
 def test_schedule(request):
-    now = datetime.now()
-    html = "<html><body>Run your schedule now {time}.</body></html>".format(time=now)
-    return HttpResponse(html)
+    print("test_schedule")
+    try:
+        context_params = {}
+        if request.method == 'POST':
+            form = RunTaskForm(request.POST)
+            print("received a POST form")
+            print(form)
+            number_of_tasks = int(form.cleaned_data['number_of_tasks'])
+            if form.is_valid() and int(number_of_tasks) > 0 and number_of_tasks < 6:
+                tasks = uuids = persisted_ids = []
+                for counter in range(number_of_tasks):
+                    task = slow_add.apply_async((random.randint(10, 100), random.randint(10, 100)), countdown=0)
+                    time.sleep(1)
+                    db_object = get_task_id_from_uuid(task.id)
+                    tasks.append(tasks)
+                    uuids.append(tasks.id)
+                    persisted_ids.append(db_object[0])
+                    print('\n---------\n%s:%s:%s\n-------\n' % (task.id, db_object, task.state))
+                context_params = {
+                    'uuids': uuids,
+                    'persisted_task_ids': persisted_ids
+                }
+            else:
+                print("Form errors %s " % form.errors)
+        context = RequestContext(request, context_params)
+        template = loader.get_template('playground/test_schedule.html')
+        return HttpResponse(template.render(context))
+    except TemplateDoesNotExist:
+        raise Http404()
+
 
 # def showjob(request):
 #     """
