@@ -6,12 +6,13 @@
 </head>
 <body>
 <div>
-    Something: {{ result }}.
+    Last result <a href="/admin/djcelery/taskstate/{{ persisted_task_id }}">{{uuid}}</a>
 </div>
 <div>
-    <form action="/test_schedule/" method="post">
-        <label for="your_name">Your name: </label>
-        <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
+    <form action="/playground/test_schedule/" method="post">
+        {% csrf_token %}
+        <label for="something">Something: </label>
+        <input id="something" type="text" name="number_of_tasks" value="{{ number_of_tasks }}">
         <input type="submit" value="OK">
     </form>
 </div>
