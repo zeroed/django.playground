@@ -1,23 +1,19 @@
-import sys
-from time import sleep
-
 __author__ = 'e.rossi'
 
-class Job:
+
+class Sample:
     """
-        This class contains some simple Job
+        This class contains the skeleton Job
     """
 
     @staticmethod
-    def do_count():
-        """
-        Just count and sleep
-        :return: True
-        """
-        i = 0
-        while i < 1000:
-            print('myjob:', i)
-            i += 1
-            sleep(0.1)
-            sys.stdout.flush()
+    def name():
+        return "Sample"
+
+    @staticmethod
+    def initialize():
+        return True
+
+    @staticmethod
+    def run():
         return True
