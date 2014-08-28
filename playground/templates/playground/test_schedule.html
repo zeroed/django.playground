@@ -17,6 +17,27 @@
     </form>
 </div>
 <div>
+    <form action="/playground/run_schedule/" method="post">
+        {% csrf_token %}
+        <input id="mock_request" type="hidden" name="detector_name" value="mock">
+        <input type="submit" value="Run Mock">
+    </form>
+</div>
+<div>
+    <form action="/playground/run_schedule/" method="post">
+        {% csrf_token %}
+        <input id="alpha_request" type="hidden" name="detector_name" value="alpha">
+        <input type="submit" value="Run Alpha">
+    </form>
+</div>
+<div>
+    <form action="/playground/run_schedule/" method="post">
+        {% csrf_token %}
+        <input id="beta_request" type="hidden" name="detector_name" value="beta">
+        <input type="submit" value="Run Beta">
+    </form>
+</div>
+<div>
     {% if task_list %}
     <ul>
     {% for task in latest_task_list %}
