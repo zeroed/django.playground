@@ -10,6 +10,7 @@ from playground.tasks import slow_add
 from django.http import Http404
 from django.template import TemplateDoesNotExist
 from playground.custom import get_task_id_from_uuid
+from django.conf import settings
 
 # import tempfile import mkstemp
 # from os import fdopen, unlink, kill
@@ -20,13 +21,14 @@ from playground.custom import get_task_id_from_uuid
 # Create your core here.
 logger = get_task_logger(__name__)
 
+
 def index(request):
     """
 
     :param request:
     :return:
     """
-    html = "<html><body>Hello Python</body></html>"
+    html = "<html><body>Hello Playground %s </body></html>" % settings.VERSION
     return HttpResponse(html)
 
 
