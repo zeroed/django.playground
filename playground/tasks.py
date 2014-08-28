@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-import time
 import random
 import datetime
 from celery import shared_task
