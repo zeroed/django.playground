@@ -17,5 +17,5 @@ def get_task_id_from_uuid(uuid):
     data = (uuid, )
     cursor.execute(sql, data)
     result = cursor.fetchone()
-    print('\n======\n%s || %s || %s\n=========\n' % (sql, data, result))
+    # print('\n======\n%s || %s || %s\n=========\n' % (sql, data, result))
     return result
