@@ -1,4 +1,5 @@
 from django.contrib import admin
+from foobar.custom_admin import custom_admin_site
 from django.utils.http import urlquote
 from playground.models import Detector
 from playground.models import Result
@@ -10,21 +11,6 @@ import random
 Relevant Docs:
 https://docs.djangoproject.com/en/dev/ref/contrib/admin/
 """
-
-
-#
-# http://stackoverflow.com/questions/12321130/how-to-override-django-admins-views/12322030#12322030
-#
-# from django.contrib.admin import AdminSite
-# from django.views.decorators.cache import never_cache
-#
-# class MyAdminSite(AdminSite):
-#     @never_cache
-#     def index(self, request, extra_context=None):
-#         # do stuff
-#         return "foo"
-#
-# admin_site = MyAdminSite()
 
 
 def make_processed(modeladmin, request, queryset):
@@ -63,6 +49,7 @@ class DetectorAdmin(admin.ModelAdmin):
     actions = [launch_sample_run]
 
 admin.site.register(Detector, DetectorAdmin)
+custom_admin_site.register(Detector, DetectorAdmin)
 
 
 def detector_link(obj):
@@ -80,6 +67,7 @@ class ResultAdmin(admin.ModelAdmin):
     readonly_fields = [detector_link, 'content', 'detector', 'value', 'duration', 'created_at']
 
 admin.site.register(Result, ResultAdmin)
+custom_admin_site.register(Result, ResultAdmin)
 
 
 # https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#other-methods
