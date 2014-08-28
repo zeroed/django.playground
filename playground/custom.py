@@ -1,3 +1,4 @@
+import re
 from django.db import connection
 
 __author__ = 'eddie'
@@ -17,5 +18,13 @@ def get_task_id_from_uuid(uuid):
     data = (uuid, )
     cursor.execute(sql, data)
     result = cursor.fetchone()
-    # print('\n======\n%s || %s || %s\n=========\n' % (sql, data, result))
     return result
+
+
+def sanitize_string(string_to_sanitize):
+    """
+    Remove everything but letters and underscores
+    :param string_to_sanitize:
+    :return: cleaned string
+    """
+    return re.sub("\W", "", string_to_sanitize)
