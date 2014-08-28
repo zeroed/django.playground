@@ -51,7 +51,10 @@ class Detector(models.Model):
             # https://docs.djangoproject.com/en/1.6/releases/1.6.3/#select-for-update-requires-a-transaction
             with transaction.atomic():
                 # https://docs.djangoproject.com/en/1.6/ref/models/querysets/#select-for-update
-                detector_found_or_created = Detector.objects.get(name='Mock')
+                try:
+                    detector_found_or_created = Detector.objects.get(name='Mock')
+                except Detector.DoesNotExist:
+                    detector_found_or_created = None
                 if not detector_found_or_created:
                     logger.info('Creating Mock from %s' % threading.current_thread())
                     detector_found_or_created = Detector.objects.create(
