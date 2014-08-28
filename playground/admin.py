@@ -27,21 +27,21 @@ upper_case_name.short_description = 'Name'
 
 
 def launch_sample_run(modeladmin, request, queryset):
-    for counter in range(5):
-        result = slow_add.apply_async((random.randint(10, 100), random.randint(10, 100)), countdown=2)
-        print(result)
-        if result.ready():
-            print("Task has run : %s" % result)
-            if result.successful():
-                print("Result was: %s" % result.result)
-            else:
-                if isinstance(result.result, Exception):
-                    print("Task failed due to raising an exception")
-                    raise result.result
-                else:
-                    print("Task failed without raising exception")
+    print("=========\nmodel_admin: %s\nrequest: %s\nqueryset: %s\n=============" % (modeladmin, request, queryset))
+    result = slow_add.apply_async((random.randint(10, 100), random.randint(10, 100)), countdown=2)
+    print(result)
+    if result.ready():
+        print("Task has run : %s" % result)
+        if result.successful():
+            print("Result was: %s" % result.result)
         else:
-            print("Task has not yet run")
+            if isinstance(result.result, Exception):
+                print("Task failed due to raising an exception")
+                raise result.result
+            else:
+                print("Task failed without raising exception")
+    else:
+        print("Task has not yet run")
 
 class DetectorAdmin(admin.ModelAdmin):
     list_display = (upper_case_name, 'description', 'last_run_date', 'run_count')
