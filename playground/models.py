@@ -1,13 +1,13 @@
-# Create your models here.
 import threading
-import time
+import re
 import datetime
 from django.db import models, IntegrityError
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import F
-from celery.utils.log import get_task_logger
 from django.utils.timezone import utc
+from celery.utils.log import get_task_logger
+from playground.custom import sanitize_string
 
 logger = get_task_logger(__name__)
 
@@ -20,7 +20,7 @@ class Detector(models.Model):
     description = models.CharField(max_length=1000, default=None, blank=True, null=True)
     last_run_date = models.DateTimeField('last run date', default=None, blank=True, null=True)
     run_count = models.IntegerField('run count', default=0)
-    created_at = models.DateTimeField('date created', default=datetime.datetime.utcnow())
+    created_at = models.DateTimeField('date created', default=datetime.datetime.utcnow().replace(tzinfo=utc))
 
     def was_runned_recently(self):
         return self.last_run_date >= timezone.now().replace(tzinfo=utc) - datetime.timedelta(hours=1)
@@ -32,39 +32,55 @@ class Detector(models.Model):
             last_run=self.last_run_date
         )
 
-    @transaction.atomic()
-    def do_something(self, x, y, d):
-        with transaction.atomic():
-            self.update_last_running_time_and_counter()
-            time.sleep(d)
-            return x + y
-
     @classmethod
     @transaction.atomic
-    def get_mock(cls):
+    def get_by_name(cls, detector_name):
         """
         Get or create but for the poor-man-thread-safe version
 
         :return:
         """
+
+        detector_name = sanitize_string(detector_name)
+
         try:
             # https://docs.djangoproject.com/en/1.6/releases/1.6.3/#select-for-update-requires-a-transaction
             with transaction.atomic():
                 # https://docs.djangoproject.com/en/1.6/ref/models/querysets/#select-for-update
                 try:
-                    detector_found_or_created = Detector.objects.get(name='Mock')
+                    detector_found_or_created = Detector.objects.get(name=detector_name)
                 except Detector.DoesNotExist:
                     detector_found_or_created = None
                 if not detector_found_or_created:
-                    logger.info('Creating Mock from %s' % threading.current_thread())
+                    logger.info('Creating Detector \"%s\" from %s' % (detector_name, threading.current_thread()))
                     detector_found_or_created = Detector.objects.create(
-                        name='Mock',
-                        description='Mock Detector'
+                        name=detector_name,
+                        description='%s Detector' % detector_name
                     )
                 return detector_found_or_created
         except IntegrityError as not_thread_safe_as_expected:
             logger.error('Some trivial concurrency problem occured here, ya know... %s' % not_thread_safe_as_expected)
-            return Detector.objects.filter(name='Mock').first()
+            return Detector.objects.filter(name=detector_name).first()
+
+    def get_implementation(self):
+        """
+        Return the Class corresponding at the detector name
+
+        :return:
+        """
+        print("Ready to EVAL : %s for %s" % (self.name, self))
+        try:
+
+            # OMG, FIX ME!
+            from playground.jobs.alpha import Alpha
+            from playground.jobs.mock import Mock
+
+
+            return eval(re.sub("\W", "", self.name).capitalize())
+        except NameError as nameError:
+            logger.error("Implementation for %s not found! %s" % (self.name, nameError))
+            print("Implementation for %s not found! %s" % (self.name, nameError))
+            return None
 
     def update_last_running_time_and_counter(self):
         the_last_detector_by_name = Detector.objects.get(name=self.name)
