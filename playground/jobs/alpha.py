@@ -1,12 +1,12 @@
 import random
-from playground.jobs.sample import Sample
+from playground.jobs.base import Base
 from celery import shared_task
 from playground.tasks import slow_add
 
 __author__ = 'eddie'
 
 
-class Alpha(Sample):
+class Alpha(Base):
     """
     Alpha Job Detector
     """
