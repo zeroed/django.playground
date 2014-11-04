@@ -12,6 +12,7 @@ class Base:
         self.run_date = None
         self.name = "Base"
         self.description = "Base description"
+        self.last_result = None
 
     def run(self):
         """
@@ -20,6 +21,12 @@ class Base:
         """
         self.run_date = datetime.now()
         return False
+
+    def print_last_result(self):
+        if self.last_result :
+            self.last_result
+        else:
+            "There is no result here"
 
     def __str__(self):
         return 'Agent {name}, "{description}" - run date: {last_run}'.format(
