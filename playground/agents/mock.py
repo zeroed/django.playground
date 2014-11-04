@@ -1,8 +1,9 @@
 from datetime import datetime
 from playground.agents.base import Base
-from playground.jobs.sample import Job
+from playground.jobs.mock import Mock as MockJob
 
 __author__ = 'e.rossi'
+
 
 class Mock(Base):
     """
@@ -19,4 +20,5 @@ class Mock(Base):
         :return:
         """
         self.run_date = datetime.now()
-        return Job.do_count()
+        result = MockJob.run()
+        return result
