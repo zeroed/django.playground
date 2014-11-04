@@ -1,14 +1,14 @@
 __author__ = 'e.rossi'
 
 
-class Sample:
+class Base:
     """
         This class contains the skeleton Job
     """
 
     @staticmethod
     def name():
-        return "Sample"
+        return "Base"
 
     @staticmethod
     def initialize():
