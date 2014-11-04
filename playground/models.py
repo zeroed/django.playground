@@ -32,6 +32,7 @@ class Detector(models.Model):
             last_run=self.last_run_date
         )
 
+    # DELETE_ME
     @classmethod
     @transaction.atomic
     def get_by_name(cls, detector_name):
@@ -92,6 +93,12 @@ class Detector(models.Model):
         # Reload:
         return Detector.objects.get(name=self.name)
 
+    def get_agent_mock(self):
+        """
+        :return: A Mock
+        """
+        from playground.agents.mock import Mock
+        return Mock
 
 class Result(models.Model):
     """
