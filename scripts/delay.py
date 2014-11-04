@@ -1,5 +1,4 @@
-from playground.tasks import slow_add, add
-import random
+from playground.agents.mock import Mock
 
 __author__ = 'e.rossi'
 
@@ -13,7 +12,7 @@ def run(*args):
     :return:
     """
     for counter in range(force_to_one(args)):
-        result = slow_add.apply_async((random.randint(10, 100), random.randint(10, 100)), countdown=2)
+        result = Mock().run()
         print(result)
         if result.ready():
             print("Task has run : %s" % result)
@@ -27,6 +26,7 @@ def run(*args):
                     print("Task failed without raising exception")
         else:
             print("Task has not yet run")
+
 
 def force_to_one(something):
     try:
