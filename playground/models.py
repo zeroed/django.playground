@@ -32,56 +32,57 @@ class Detector(models.Model):
             last_run=self.last_run_date
         )
 
-    # DELETE_ME
-    @classmethod
-    @transaction.atomic
-    def get_by_name(cls, detector_name):
-        """
-        Get or create but for the poor-man-thread-safe version
+    ## DELETE_ME
+    # @classmethod
+    # @transaction.atomic
+    # def get_by_name(cls, detector_name):
+    #     """
+    #     Get or create but for the poor-man-thread-safe version
+    #
+    #     :return:
+    #     """
+    #
+    #     detector_name = sanitize_string(detector_name)
+    #
+    #     try:
+    #         # https://docs.djangoproject.com/en/1.6/releases/1.6.3/#select-for-update-requires-a-transaction
+    #         with transaction.atomic():
+    #             # https://docs.djangoproject.com/en/1.6/ref/models/querysets/#select-for-update
+    #             try:
+    #                 detector_found_or_created = Detector.objects.get(name=detector_name)
+    #             except Detector.DoesNotExist:
+    #                 detector_found_or_created = None
+    #             if not detector_found_or_created:
+    #                 logger.info('Creating Detector \"%s\" from %s' % (detector_name, threading.current_thread()))
+    #                 detector_found_or_created = Detector.objects.create(
+    #                     name=detector_name,
+    #                     description='%s Detector' % detector_name
+    #                 )
+    #             return detector_found_or_created
+    #     except IntegrityError as not_thread_safe_as_expected:
+    #         logger.error('Some trivial concurrency problem occured here, ya know... %s' % not_thread_safe_as_expected)
+    #         return Detector.objects.filter(name=detector_name).first()
 
-        :return:
-        """
-
-        detector_name = sanitize_string(detector_name)
-
-        try:
-            # https://docs.djangoproject.com/en/1.6/releases/1.6.3/#select-for-update-requires-a-transaction
-            with transaction.atomic():
-                # https://docs.djangoproject.com/en/1.6/ref/models/querysets/#select-for-update
-                try:
-                    detector_found_or_created = Detector.objects.get(name=detector_name)
-                except Detector.DoesNotExist:
-                    detector_found_or_created = None
-                if not detector_found_or_created:
-                    logger.info('Creating Detector \"%s\" from %s' % (detector_name, threading.current_thread()))
-                    detector_found_or_created = Detector.objects.create(
-                        name=detector_name,
-                        description='%s Detector' % detector_name
-                    )
-                return detector_found_or_created
-        except IntegrityError as not_thread_safe_as_expected:
-            logger.error('Some trivial concurrency problem occured here, ya know... %s' % not_thread_safe_as_expected)
-            return Detector.objects.filter(name=detector_name).first()
-
-    def get_implementation(self):
-        """
-        Return the Class corresponding at the detector name
-
-        :return:
-        """
-        print("Ready to EVAL : %s for %s" % (self.name, self))
-        try:
-
-            # OMG, FIX ME!
-            from playground.jobs.alpha import Alpha
-            from playground.jobs.mock import Mock
-
-
-            return eval(re.sub("\W", "", self.name).capitalize())
-        except NameError as nameError:
-            logger.error("Implementation for %s not found! %s" % (self.name, nameError))
-            print("Implementation for %s not found! %s" % (self.name, nameError))
-            return None
+    ## DELETE_ME
+    # def get_implementation(self):
+    #     """
+    #     Return the Class corresponding at the detector name
+    #
+    #     :return:
+    #     """
+    #     print("Ready to EVAL : %s for %s" % (self.name, self))
+    #     try:
+    #
+    #         # OMG, FIX ME!
+    #         from playground.jobs.alpha import Alpha
+    #         from playground.jobs.mock import Mock
+    #
+    #
+    #         return eval(re.sub("\W", "", self.name).capitalize())
+    #     except NameError as nameError:
+    #         logger.error("Implementation for %s not found! %s" % (self.name, nameError))
+    #         print("Implementation for %s not found! %s" % (self.name, nameError))
+    #         return None
 
     def update_last_running_time_and_counter(self):
         the_last_detector_by_name = Detector.objects.get(name=self.name)
