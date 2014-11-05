@@ -2,8 +2,9 @@ import random
 import datetime
 import time
 from celery import shared_task
+from django.db import transaction
 from playground.jobs.base import Base
-from playground.tasks import slow_add
+from playground.models import Detector, Result
 
 from celery.utils.log import get_task_logger
 
@@ -50,12 +51,18 @@ def task(x, y):
         time.sleep(delay)
         message = 'Adding {0} + {1} with delay {2}'.format(x, y, delay)
         Mock.logger.info(message)
-        result = dict(
-            content=message,
-            value=x + y,
-            detector=None,
-            created_at=datetime.datetime.utcnow(),
-            duration=delay
-        )
+        with transaction.atomic():
+            mock = Detector.get_agent_mock()
+            result = Result.objects.create(
+                content=message,
+                value=(x + y),
+                detector=mock,
+                created_at=datetime.datetime.utcnow(),
+                duration=delay
+            )
+            mock = Detector.update_last_running_time_and_counter(mock.name)
+        Mock.logger.info("The detector is up to date: {0}".format(mock))
+        return result.value
+
     except Exception as exc:
         task.retry(exc=exc, countdown=10)
