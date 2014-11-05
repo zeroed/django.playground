@@ -85,21 +85,29 @@ class Detector(models.Model):
     #         return None
 
     def update_last_running_time_and_counter(self):
-        the_last_detector_by_name = Detector.objects.get(name=self.name)
+        return Detector.update_last_running_time_and_counter(self.name)
+
+    @staticmethod
+    def update_last_running_time_and_counter(name):
+        # https://docs.djangoproject.com/en/dev/ref/models/querysets/#select-for-update
+        # e.g.
+        # entries = Entry.objects.select_for_update().filter(author=request.user)
+        the_last_detector_by_name = Detector.objects.select_for_update().filter(name=name)[0]
+        # https://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.full_clean
         the_last_detector_by_name.full_clean()
         # https://docs.djangoproject.com/en/1.4/topics/i18n/timezones/#naive-and-aware-datetime-objects
         the_last_detector_by_name.last_run_date = datetime.datetime.utcnow().replace(tzinfo=utc)
         the_last_detector_by_name.run_count = F('run_count') + 1
         the_last_detector_by_name.save()
         # Reload:
-        return Detector.objects.get(name=self.name)
+        return Detector.objects.get(name=name)
 
-    def get_agent_mock(self):
+    @staticmethod
+    def get_agent_mock():
         """
-        :return: A Mock
+        :return: The Mock Detector (DB entry)
         """
-        from playground.agents.mock import Mock
-        return Mock
+        return Detector.objects.get(name='Mock')
 
 class Result(models.Model):
     """
