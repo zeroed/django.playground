@@ -695,7 +695,20 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery --app=foobar worker -l INFO --concurrency=5 --events --heartbeat-interval=5 --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celeryd.pid --logfile=logs/celeryd.log --detach
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celeryev.pid --logfile=logs/celeryev.log --detach
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar --max-interval=1 --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celerybeat.pid --logfile=logs/celerybeat.log --detach
+```
+
+Celery events 3.1.13 (Cipater)
+```
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --app=foobar
+```
+
+## Fixtures
+
+Initialize the Detectors in the DB
+
+```
+eddie@linuxbox ~/workspace.python/django.playground (develop) $ python3 manage.py loaddata fixtures/initial_data.xml
+Installed 2 object(s) from 1 fixture(s)  
 ```
 
 ## Run a sample

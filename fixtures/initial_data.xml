@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--manage.py dumpdata - -format=xml - -indent=4 -->
+<django-objects version="1.0">
+    <object pk="1" model="playground.detector">
+        <field name="name" type="CharField">Mock</field>
+        <field name="description" type="CharField">Mock detector</field>
+        <field name="last_run_date" type="DateTimeField">2014-11-04T23:00:00+00:00</field>
+        <field name="run_count" type="IntegerField">1</field>
+        <field name="created_at" type="DateTimeField">2014-11-04T23:00:00+00:00</field>
+    </object>
+    <object pk="2" model="playground.detector">
+        <field name="name" type="CharField">Alpha</field>
+        <field name="description" type="CharField">Alpha detector</field>
+        <field name="last_run_date" type="DateTimeField">2014-11-04T23:00:00+00:00</field>
+        <field name="run_count" type="IntegerField">1</field>
+        <field name="created_at" type="DateTimeField">2014-11-04T23:00:00+00:00</field>
+    </object>
+</django-objects>
