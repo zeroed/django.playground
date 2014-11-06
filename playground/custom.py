@@ -1,5 +1,7 @@
 import re
 from django.db import connection
+from playground.agents.mock import Mock as MockAgent
+from playground.agents.alpha import Alpha as AlphaAgent
 
 __author__ = 'eddie'
 
@@ -28,3 +30,15 @@ def sanitize_string(string_to_sanitize):
     :return: cleaned string
     """
     return re.sub("\W", "", string_to_sanitize)
+
+
+def get_agent_by_name(agent_name):
+    """
+
+    :param agent_name:
+    :return: A subclass of Base from the implemented agents...
+    """
+    return {
+        'mock': MockAgent,
+        'alpha': AlphaAgent,
+        }.get(str(agent_name).lower(), None)
