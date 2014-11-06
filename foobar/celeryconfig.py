@@ -103,3 +103,6 @@ CELERY_ROUTES = {
 }
 
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+# http://docs.celeryproject.org/en/latest/userguide/monitoring.html
+# http://docs.celeryproject.org/en/latest/userguide/monitoring.html#flower-real-time-celery-web-monitor
