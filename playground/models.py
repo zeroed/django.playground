@@ -1,13 +1,9 @@
-import threading
-import re
 import datetime
-from django.db import models, IntegrityError
+from django.db import models
 from django.utils import timezone
-from django.db import transaction
 from django.db.models import F
 from django.utils.timezone import utc
 from celery.utils.log import get_task_logger
-from playground.custom import sanitize_string
 
 logger = get_task_logger(__name__)
 
@@ -101,6 +97,14 @@ class Detector(models.Model):
         the_last_detector_by_name.save()
         # Reload:
         return Detector.objects.get(name=name)
+
+    @staticmethod
+    def get_registered_agent_names():
+        """
+
+        :return: The String list of detector names
+        """
+        return list(map((lambda detector: str(detector.name).lower()), Detector.objects.all()))
 
     @staticmethod
     def get_agent_mock():
