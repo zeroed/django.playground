@@ -363,28 +363,28 @@ COMMIT;
 On Linux:
 
 ```
-eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server status                                                                           │    celeryd_multi
-Status of node rabbit@linuxbox ...                                                                                                                          │    celerymon
-Error: unable to connect to node rabbit@linuxbox: nodedown                                                                                                  │    djcelerymon
-                                                                                                                                                            │
-DIAGNOSTICS                                                                                                                                                 │[sessions]
-===========                                                                                                                                                 │    clearsessions
-                                                                                                                                                            │
-attempted to contact: [rabbit@linuxbox]                                                                                                                     │[staticfiles]
-                                                                                                                                                            │    collectstatic
-rabbit@linuxbox:                                                                                                                                            │    findstatic
-  * connected to epmd (port 4369) on linuxbox                                                                                                               │    runserver
-  * epmd reports: node 'rabbit' not running at all                                                                                                          │eddie@linuxbox:~/Workspace/django.playground$ 
-                  no other nodes on linuxbox                                                                                                                │eddie@linuxbox:~/Workspace/django.playground$ 
-  * suggestion: start the node                                                                                                                              │eddie@linuxbox:~/Workspace/django.playground$ 
-                                                                                                                                                            │eddie@linuxbox:~/Workspace/django.playground$ 
-current node details:                                                                                                                                       │eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver                                                                                   
-- node name: rabbitmqctl8550@linuxbox                                                                                                                       │Validating models...
-- home dir: /var/lib/rabbitmq                                                                                                                               │
-- cookie hash: XDLsoUi+UetOP7SztXhjhw==                                                                                                                     │0 errors found
-                                                                                                                                                            │August 20, 2014 - 07:27:11
-eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server start                                                                            │Django version 1.6.5, using settings 'foobar.settings'
- * Starting message broker rabbitmq-server                                                                                                                  │Starting development server at http://127.0.0.1:8000/
+eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server status
+Status of node rabbit@linuxbox ...
+Error: unable to connect to node rabbit@linuxbox: nodedown
+
+DIAGNOSTICS
+===========
+
+attempted to contact: [rabbit@linuxbox]
+
+rabbit@linuxbox:
+  * connected to epmd (port 4369) on linuxbox
+  * epmd reports: node 'rabbit' not running at all
+                  no other nodes on linuxbox
+  * suggestion: start the node
+  
+  current node details:                                                                                   
+- node name: rabbitmqctl8550@linuxbox
+- home dir: /var/lib/rabbitmq
+- cookie hash: XDLsoUi+UetOP7SztXhjhw==
+
+eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server start
+ * Starting message broker rabbitmq-server
    ...done.     
 
 eddie@linuxbox:~/Workspace/django.playground$ sudo rabbitmqctl status
