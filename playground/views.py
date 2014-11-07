@@ -9,7 +9,12 @@ from django.utils.html import escape
 import logging
 from playground.models import Detector
 from playground.forms import RunDetectorTaskForm
-from playground.custom import get_task_id_from_uuid, get_agent_by_name, can_run, get_celery_worker_status
+from playground.custom import \
+    get_task_id_from_uuid, \
+    get_agent_by_name, \
+    can_run, \
+    get_celery_worker_status, \
+    get_latest_task_list
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +43,11 @@ def test(request):
 def run_schedule(request):
     try:
         context_params = {}
-        if request.method == 'POST':
+        if request.method == 'GET':
+            context_params = {
+                'latest_task_list': get_latest_task_list()
+            }
+        elif request.method == 'POST':
             logger.info("POST to run_schedule")
             form = RunDetectorTaskForm(request.POST)
             logger.info("Received form:\n{0}".format(form))
@@ -51,7 +60,7 @@ def run_schedule(request):
                     and detector_name in Detector.get_registered_agent_names():
 
                 agent = get_agent_by_name(detector_name)
-                message = "Retrieved agent {0}".format(agent.__class__.__name__)
+                message = "Retrieved agent {0}".format(agent.name())
                 logger.info(message)
                 if can_run():
                     task = agent().run()
@@ -62,22 +71,25 @@ def run_schedule(request):
                     context_params = {
                         'uuid': task.id,
                         'persisted_task_id': db_object[0],
-                        'errors': 'System errors',
-                        'message' : message
+                        'errors': "",
+                        'message': message,
+                        'latest_task_list': get_latest_task_list()
                     }
                 else:
                     context_params = {
                         'uuid': None,
                         'persisted_task_id': None,
                         'errors': 'System errors',
-                        'message' : get_celery_worker_status()
+                        'message' : get_celery_worker_status(),
+                        'latest_task_list': get_latest_task_list()
                     }
             else:
                 context_params = {
                     'uuid': None,
                     'persisted_task_id': None,
                     'errors': form.errors,
-                    'message' : "There are some error into the form"
+                    'message' : "There are some error into the form",
+                    'latest_task_list': get_latest_task_list()
                 }
                 logger.error("Form errors %s " % form.errors)
         context = RequestContext(request, context_params)

@@ -23,15 +23,15 @@
 </div>
 
 <div>
-    {% if task_list %}
+    {% if latest_task_list %}
     <ul>
-    {% for task in latest_task_list %}
-        <li><a href="/admin/djcelery/taskstate/{{ task.id }}/">{{ task.id }}</a></li>
-    {% endfor %}
+        {% for task in latest_task_list %}
+            <li><a href="/admin/djcelery/taskstate/{{ task.id }}">{{task.uuid}}</a></li>
+        {% endfor %}
     </ul>
-{% else %}
+    {% else %}
     <p>No tasks are available (yet).</p>
-{% endif %}
+    {% endif %}
 </div>
 </body>
 </html>
