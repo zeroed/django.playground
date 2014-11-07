@@ -9,7 +9,7 @@ from django.utils.html import escape
 import logging
 from playground.models import Detector
 from playground.forms import RunDetectorTaskForm
-from playground.custom import get_task_id_from_uuid, get_agent_by_name
+from playground.custom import get_task_id_from_uuid, get_agent_by_name, can_run, get_celery_worker_status
 
 logger = logging.getLogger(__name__)
 
@@ -51,19 +51,34 @@ def run_schedule(request):
                     and detector_name in Detector.get_registered_agent_names():
 
                 agent = get_agent_by_name(detector_name)
-                logger.warn("Retrieved agent {0}".format(agent))
-                task = agent().run()
-
-                # Silly but it seems this is necessary to find the object on the DB
-                time.sleep(1)
-
-                db_object = get_task_id_from_uuid(task.id)
-                logger.info('\n---------\n%s:%s:%s\n-------\n' % (task.id, db_object, task.state))
-                context_params = {
-                    'uuid': task.id,
-                    'persisted_task_id': db_object[0]
-                }
+                message = "Retrieved agent {0}".format(agent.__class__.__name__)
+                logger.info(message)
+                if can_run():
+                    task = agent().run()
+                    # Silly but it seems this is necessary to find the object on the DB
+                    time.sleep(1)
+                    db_object = get_task_id_from_uuid(task.id)
+                    logger.info('\n---------\n%s:%s:%s\n-------\n' % (task.id, db_object, task.state))
+                    context_params = {
+                        'uuid': task.id,
+                        'persisted_task_id': db_object[0],
+                        'errors': 'System errors',
+                        'message' : message
+                    }
+                else:
+                    context_params = {
+                        'uuid': None,
+                        'persisted_task_id': None,
+                        'errors': 'System errors',
+                        'message' : get_celery_worker_status()
+                    }
             else:
+                context_params = {
+                    'uuid': None,
+                    'persisted_task_id': None,
+                    'errors': form.errors,
+                    'message' : "There are some error into the form"
+                }
                 logger.error("Form errors %s " % form.errors)
         context = RequestContext(request, context_params)
         template = loader.get_template('playground/test_schedule.html')
