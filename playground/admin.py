@@ -1,4 +1,5 @@
 from django.contrib import admin
+from foobar.custom_admin import custom_admin_site
 from django.utils.http import urlquote
 from playground.models import Detector
 from playground.models import Result
@@ -26,21 +27,21 @@ upper_case_name.short_description = 'Name'
 
 
 def launch_sample_run(modeladmin, request, queryset):
-    for counter in range(5):
-        result = slow_add.apply_async((random.randint(10, 100), random.randint(10, 100)), countdown=2)
-        print(result)
-        if result.ready():
-            print("Task has run : %s" % result)
-            if result.successful():
-                print("Result was: %s" % result.result)
-            else:
-                if isinstance(result.result, Exception):
-                    print("Task failed due to raising an exception")
-                    raise result.result
-                else:
-                    print("Task failed without raising exception")
+    print("=========\nmodel_admin: %s\nrequest: %s\nqueryset: %s\n=============" % (modeladmin, request, queryset))
+    result = slow_add.apply_async((random.randint(10, 100), random.randint(10, 100)), countdown=2)
+    print(result)
+    if result.ready():
+        print("Task has run : %s" % result)
+        if result.successful():
+            print("Result was: %s" % result.result)
         else:
-            print("Task has not yet run")
+            if isinstance(result.result, Exception):
+                print("Task failed due to raising an exception")
+                raise result.result
+            else:
+                print("Task failed without raising exception")
+    else:
+        print("Task has not yet run")
 
 class DetectorAdmin(admin.ModelAdmin):
     list_display = (upper_case_name, 'description', 'last_run_date', 'run_count')
@@ -48,6 +49,7 @@ class DetectorAdmin(admin.ModelAdmin):
     actions = [launch_sample_run]
 
 admin.site.register(Detector, DetectorAdmin)
+custom_admin_site.register(Detector, DetectorAdmin)
 
 
 def detector_link(obj):
@@ -65,22 +67,10 @@ class ResultAdmin(admin.ModelAdmin):
     readonly_fields = [detector_link, 'content', 'detector', 'value', 'duration', 'created_at']
 
 admin.site.register(Result, ResultAdmin)
+custom_admin_site.register(Result, ResultAdmin)
 
-#
-# from playground.models import Taskmeta
-#
-# admin.site.register(Taskmeta)
-#
-# class Taskmeta(models.Model):
-#     """
-#     Get the results from the DB (raw) ...
-#     """
-#     id = models.IntegerField(primary_key=True)
-#     task_id = models.CharField(unique=True, max_length=255, blank=True)
-#     status = models.CharField(max_length=50, blank=True)
-#     result = models.BinaryField(blank=True, null=True)
-#     date_done = models.DateTimeField(blank=True, null=True)
-#     traceback = models.TextField(blank=True)
-#     class Meta:
-#         managed = False
-#         db_table = 'foobardb_taskmeta'
+
+# https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#other-methods
+# https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#django.contrib.admin.ModelAdmin.changelist_view
+# https://docs.djangoproject.com/en/1.6/ref/contrib/admin/actions/#making-actions-available-site-wide
+

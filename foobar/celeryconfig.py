@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BROKER_URL = "amqp://guest:guest@localhost:5672//"
 
 # List of modules to import when celery starts.
-# CELERY_IMPORTS = ("playground.tasks", )
+CELERY_IMPORTS = ("playground.tasks", "playground.jobs.mock")
 
 CELERY_ANNOTATIONS = {"tasks.add": {"rate_limit": "10/s"}}
 
@@ -103,3 +103,6 @@ CELERY_ROUTES = {
 }
 
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+# http://docs.celeryproject.org/en/latest/userguide/monitoring.html
+# http://docs.celeryproject.org/en/latest/userguide/monitoring.html#flower-real-time-celery-web-monitor

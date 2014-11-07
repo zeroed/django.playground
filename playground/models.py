@@ -1,13 +1,9 @@
-# Create your models here.
-import threading
-import time
 import datetime
-from django.db import models, IntegrityError
+from django.db import models
 from django.utils import timezone
-from django.db import transaction
 from django.db.models import F
-from celery.utils.log import get_task_logger
 from django.utils.timezone import utc
+from celery.utils.log import get_task_logger
 
 logger = get_task_logger(__name__)
 
@@ -20,7 +16,7 @@ class Detector(models.Model):
     description = models.CharField(max_length=1000, default=None, blank=True, null=True)
     last_run_date = models.DateTimeField('last run date', default=None, blank=True, null=True)
     run_count = models.IntegerField('run count', default=0)
-    created_at = models.DateTimeField('date created', default=datetime.datetime.utcnow())
+    created_at = models.DateTimeField('date created', default=datetime.datetime.utcnow().replace(tzinfo=utc))
 
     def was_runned_recently(self):
         return self.last_run_date >= timezone.now().replace(tzinfo=utc) - datetime.timedelta(hours=1)
@@ -32,47 +28,90 @@ class Detector(models.Model):
             last_run=self.last_run_date
         )
 
-    @transaction.atomic()
-    def do_something(self, x, y, d):
-        with transaction.atomic():
-            self.update_last_running_time_and_counter()
-            time.sleep(d)
-            return x + y
+    ## DELETE_ME
+    # @classmethod
+    # @transaction.atomic
+    # def get_by_name(cls, detector_name):
+    #     """
+    #     Get or create but for the poor-man-thread-safe version
+    #
+    #     :return:
+    #     """
+    #
+    #     detector_name = sanitize_string(detector_name)
+    #
+    #     try:
+    #         # https://docs.djangoproject.com/en/1.6/releases/1.6.3/#select-for-update-requires-a-transaction
+    #         with transaction.atomic():
+    #             # https://docs.djangoproject.com/en/1.6/ref/models/querysets/#select-for-update
+    #             try:
+    #                 detector_found_or_created = Detector.objects.get(name=detector_name)
+    #             except Detector.DoesNotExist:
+    #                 detector_found_or_created = None
+    #             if not detector_found_or_created:
+    #                 logger.info('Creating Detector \"%s\" from %s' % (detector_name, threading.current_thread()))
+    #                 detector_found_or_created = Detector.objects.create(
+    #                     name=detector_name,
+    #                     description='%s Detector' % detector_name
+    #                 )
+    #             return detector_found_or_created
+    #     except IntegrityError as not_thread_safe_as_expected:
+    #         logger.error('Some trivial concurrency problem occured here, ya know... %s' % not_thread_safe_as_expected)
+    #         return Detector.objects.filter(name=detector_name).first()
 
-    @classmethod
-    @transaction.atomic
-    def get_mock(cls):
-        """
-        Get or create but for the poor-man-thread-safe version
-
-        :return:
-        """
-        try:
-            # https://docs.djangoproject.com/en/1.6/releases/1.6.3/#select-for-update-requires-a-transaction
-            with transaction.atomic():
-                # https://docs.djangoproject.com/en/1.6/ref/models/querysets/#select-for-update
-                detector_found_or_created = Detector.objects.get(name='Mock')
-                if not detector_found_or_created:
-                    logger.info('Creating Mock from %s' % threading.current_thread())
-                    detector_found_or_created = Detector.objects.create(
-                        name='Mock',
-                        description='Mock Detector'
-                    )
-                return detector_found_or_created
-        except IntegrityError as not_thread_safe_as_expected:
-            logger.error('Some trivial concurrency problem occured here, ya know... %s' % not_thread_safe_as_expected)
-            return Detector.objects.filter(name='Mock').first()
+    ## DELETE_ME
+    # def get_implementation(self):
+    #     """
+    #     Return the Class corresponding at the detector name
+    #
+    #     :return:
+    #     """
+    #     print("Ready to EVAL : %s for %s" % (self.name, self))
+    #     try:
+    #
+    #         # OMG, FIX ME!
+    #         from playground.jobs.alpha import Alpha
+    #         from playground.jobs.mock import Mock
+    #
+    #
+    #         return eval(re.sub("\W", "", self.name).capitalize())
+    #     except NameError as nameError:
+    #         logger.error("Implementation for %s not found! %s" % (self.name, nameError))
+    #         print("Implementation for %s not found! %s" % (self.name, nameError))
+    #         return None
 
     def update_last_running_time_and_counter(self):
-        the_last_detector_by_name = Detector.objects.get(name=self.name)
+        return Detector.update_last_running_time_and_counter(self.name)
+
+    @staticmethod
+    def update_last_running_time_and_counter(name):
+        # https://docs.djangoproject.com/en/dev/ref/models/querysets/#select-for-update
+        # e.g.
+        # entries = Entry.objects.select_for_update().filter(author=request.user)
+        the_last_detector_by_name = Detector.objects.select_for_update().filter(name=name)[0]
+        # https://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.full_clean
         the_last_detector_by_name.full_clean()
         # https://docs.djangoproject.com/en/1.4/topics/i18n/timezones/#naive-and-aware-datetime-objects
         the_last_detector_by_name.last_run_date = datetime.datetime.utcnow().replace(tzinfo=utc)
         the_last_detector_by_name.run_count = F('run_count') + 1
         the_last_detector_by_name.save()
         # Reload:
-        return Detector.objects.get(name=self.name)
+        return Detector.objects.get(name=name)
 
+    @staticmethod
+    def get_registered_agent_names():
+        """
+
+        :return: The String list of detector names
+        """
+        return list(map((lambda detector: str(detector.name).lower()), Detector.objects.all()))
+
+    @staticmethod
+    def get_agent_mock():
+        """
+        :return: The Mock Detector (DB entry)
+        """
+        return Detector.objects.get(name='Mock')
 
 class Result(models.Model):
     """

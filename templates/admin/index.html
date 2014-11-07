@@ -12,6 +12,14 @@
 {% block content %}
 <div id="content-main">
 
+{% block foo %}
+    <div>
+        <p>
+            Welcome
+        </p>
+    </div>
+{% endblock %}
+
 {% if app_list %}
     {% for app in app_list %}
         <div class="app-{{ app.app_label }} module">

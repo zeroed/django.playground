@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Test Agents</title>
+</head>
+<body>
+
+<div>
+    Last result <a href="/admin/djcelery/taskstate/{{ persisted_task_id }}">{{uuid}}</a>
+    <br>
+    Errors: {{errors}}
+    <br>
+    Message: {{message}}
+</div>
+
+<div>
+    <form action="/playground/run_schedule/" method="post">
+        {% csrf_token %}
+        <input id="mock_request" type="hidden" name="detector_name" value="mock">
+        <input type="submit" value="Run Mock">
+    </form>
+</div>
+
+<div>
+    {% if latest_task_list %}
+    <ul>
+        {% for task in latest_task_list %}
+            <li><a href="/admin/djcelery/taskstate/{{ task.id }}">{{task.uuid}}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tasks are available (yet).</p>
+    {% endif %}
+</div>
+</body>
+</html>

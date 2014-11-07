@@ -15,12 +15,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Name and email addresses of recipients
 ADMINS = (
-    ('Edoardo Rossi', 'admin@foobar.org'),
+    ('Edoardo Rossi', 'eddie@linuxbox'),
 )
 
 MANAGERS = ADMINS
 
-VERSION = '0.1'
+VERSION = '0.2'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -115,3 +115,66 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = {
     'templates/',
 }
+
+LOG_FILE = os.path.join(BASE_DIR, 'logs/django.log')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    # 'filters': {
+    #     'special': {
+    #         '()': 'project.logging.SpecialFilter',
+    #         'foo': 'bar',
+    #     }
+    # },
+    'handlers': {
+        # 'null': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.NullHandler',
+        # },
+        'console': {
+            'level': 'WARN',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        # 'mail_admins': {
+        #     'level': 'ERROR',
+        #     'class': 'django.utils.log.AdminEmailHandler',
+        #     # 'filters': ['special']
+        # },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE,
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console','file'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'django.request': {
+            'handlers': ['console','file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'playground.views': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            # 'filters': ['special']
+        }
+    }
+}
+
+ERROR_KEY = "ERROR"
+

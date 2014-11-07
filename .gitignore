@@ -66,3 +66,9 @@ target/
 
 # Celery files
 celerybeat-schedule
+
+# Virtualenv ignore in GIT
+playground.env/bin
+playground.env/lib
+playground.env/include
+

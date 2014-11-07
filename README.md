@@ -7,6 +7,9 @@
 - [Python 3.4.1 (Docs)](https://docs.python.org/3/)
 
     ... install Python in a way that you like... I don't care ...
+    Also use [Virtualenv 1.11.6](http://virtualenv.readthedocs.org/en/latest/virtualenv.htm)
+    
+    `eddie@linuxbox:~/Workspace/django.playground$ source playground.env/bin/activate`
 
 - [PiP](https://pip.pypa.io/en/latest/index.html)
 
@@ -16,12 +19,12 @@
     $ sudo pip install Django
     ```
     
-- [Django 1.6.5](https://docs.djangoproject.com/en/1.6/)
+- [Django 1.6.6](https://docs.djangoproject.com/en/1.6/)
 
     ```
-    pip install Django==1.6.5
+    pip install Django==1.6.6
     python -c "import django; print(django.get_version())"
-    > 1.6.5
+    > 1.6.6
     ```
 
     Do something...
@@ -360,28 +363,28 @@ COMMIT;
 On Linux:
 
 ```
-eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server status                                                                           │    celeryd_multi
-Status of node rabbit@linuxbox ...                                                                                                                          │    celerymon
-Error: unable to connect to node rabbit@linuxbox: nodedown                                                                                                  │    djcelerymon
-                                                                                                                                                            │
-DIAGNOSTICS                                                                                                                                                 │[sessions]
-===========                                                                                                                                                 │    clearsessions
-                                                                                                                                                            │
-attempted to contact: [rabbit@linuxbox]                                                                                                                     │[staticfiles]
-                                                                                                                                                            │    collectstatic
-rabbit@linuxbox:                                                                                                                                            │    findstatic
-  * connected to epmd (port 4369) on linuxbox                                                                                                               │    runserver
-  * epmd reports: node 'rabbit' not running at all                                                                                                          │eddie@linuxbox:~/Workspace/django.playground$ 
-                  no other nodes on linuxbox                                                                                                                │eddie@linuxbox:~/Workspace/django.playground$ 
-  * suggestion: start the node                                                                                                                              │eddie@linuxbox:~/Workspace/django.playground$ 
-                                                                                                                                                            │eddie@linuxbox:~/Workspace/django.playground$ 
-current node details:                                                                                                                                       │eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver                                                                                   
-- node name: rabbitmqctl8550@linuxbox                                                                                                                       │Validating models...
-- home dir: /var/lib/rabbitmq                                                                                                                               │
-- cookie hash: XDLsoUi+UetOP7SztXhjhw==                                                                                                                     │0 errors found
-                                                                                                                                                            │August 20, 2014 - 07:27:11
-eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server start                                                                            │Django version 1.6.5, using settings 'foobar.settings'
- * Starting message broker rabbitmq-server                                                                                                                  │Starting development server at http://127.0.0.1:8000/
+eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server status
+Status of node rabbit@linuxbox ...
+Error: unable to connect to node rabbit@linuxbox: nodedown
+
+DIAGNOSTICS
+===========
+
+attempted to contact: [rabbit@linuxbox]
+
+rabbit@linuxbox:
+  * connected to epmd (port 4369) on linuxbox
+  * epmd reports: node 'rabbit' not running at all
+                  no other nodes on linuxbox
+  * suggestion: start the node
+  
+  current node details:                                                                                   
+- node name: rabbitmqctl8550@linuxbox
+- home dir: /var/lib/rabbitmq
+- cookie hash: XDLsoUi+UetOP7SztXhjhw==
+
+eddie@linuxbox:~/Workspace/django.playground$ sudo service rabbitmq-server start
+ * Starting message broker rabbitmq-server
    ...done.     
 
 eddie@linuxbox:~/Workspace/django.playground$ sudo rabbitmqctl status
@@ -692,7 +695,20 @@ eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py runserver
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery --app=foobar worker -l INFO --concurrency=5 --events --heartbeat-interval=5 --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celeryd.pid --logfile=logs/celeryd.log --detach
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celerycam --verbosity=3 --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celeryev.pid --logfile=logs/celeryev.log --detach
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery beat -l INFO --app=foobar --max-interval=1 --broker='amqp://guest:guest@localhost:5672//' --pidfile=pids/celerybeat.pid --logfile=logs/celerybeat.log --detach
+```
+
+Celery events 3.1.13 (Cipater)
+```
 eddie@linuxbox:~/Workspace/django.playground$ python3 manage.py celery events --frequency=1 --loglevel=INFO --broker='amqp://guest:guest@localhost:5672//' --app=foobar
+```
+
+## Fixtures
+
+Initialize the Detectors in the DB
+
+```
+eddie@linuxbox ~/workspace.python/django.playground (develop) $ python3 manage.py loaddata fixtures/initial_data.xml
+Installed 2 object(s) from 1 fixture(s)  
 ```
 
 ## Run a sample
