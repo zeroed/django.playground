@@ -20,8 +20,23 @@ def get_task_id_from_uuid(uuid):
     sql = "SELECT id, task_id FROM djcelery_taskstate WHERE task_id = %s;"
     data = (uuid, )
     cursor.execute(sql, data)
-    result = cursor.fetchone()
-    return result
+    return cursor.fetchone()
+
+
+def get_latest_task_list():
+    """
+    Get the database_id list for all the tasks
+    mapped as {'id':00, 'uuid':010101}
+    :return:
+    """
+    cursor = connection.cursor()
+    sql = "SELECT id, task_id FROM djcelery_taskstate ORDER BY tstamp DESC"
+    data = ()
+    cursor.execute(sql, data)
+    result_map = []
+    for task in cursor.fetchall():
+        result_map.append({'id': str(task[0]), 'uuid': str(task[1])})
+    return result_map
 
 
 def sanitize_string(string_to_sanitize):
