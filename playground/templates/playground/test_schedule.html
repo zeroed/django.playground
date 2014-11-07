@@ -5,17 +5,15 @@
     <title>Test Agents</title>
 </head>
 <body>
+
 <div>
     Last result <a href="/admin/djcelery/taskstate/{{ persisted_task_id }}">{{uuid}}</a>
+    <br>
+    Errors: {{errors}}
+    <br>
+    Message: {{message}}
 </div>
-<!--<div>-->
-    <!--<form action="/playground/test_schedule/" method="post">-->
-        <!--{% csrf_token %}-->
-        <!--<label for="something">Something: </label>-->
-        <!--<input id="something" type="text" name="number_of_tasks" value="{{ number_of_tasks }}">-->
-        <!--<input type="submit" value="OK">-->
-    <!--</form>-->
-<!--</div>-->
+
 <div>
     <form action="/playground/run_schedule/" method="post">
         {% csrf_token %}
@@ -23,20 +21,7 @@
         <input type="submit" value="Run Mock">
     </form>
 </div>
-<!--<div>-->
-    <!--<form action="/playground/run_schedule/" method="post">-->
-        <!--{% csrf_token %}-->
-        <!--<input id="alpha_request" type="hidden" name="detector_name" value="alpha">-->
-        <!--<input type="submit" value="Run Alpha">-->
-    <!--</form>-->
-<!--</div>-->
-<!--<div>-->
-    <!--<form action="/playground/run_schedule/" method="post">-->
-        <!--{% csrf_token %}-->
-        <!--<input id="beta_request" type="hidden" name="detector_name" value="beta">-->
-        <!--<input type="submit" value="Run Beta">-->
-    <!--</form>-->
-<!--</div>-->
+
 <div>
     {% if task_list %}
     <ul>
