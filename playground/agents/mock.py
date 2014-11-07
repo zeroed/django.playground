@@ -1,7 +1,7 @@
-import logging
 from datetime import datetime
 from playground.agents.base import Base
 from playground.jobs.mock import Mock as MockJob
+import logging
 
 __author__ = 'e.rossi'
 
@@ -30,3 +30,7 @@ class Mock(Base):
         result = MockJob.run()
         Mock.logger.info("{0} worked on {1}. ".format(self.name, result))
         return result
+
+    @staticmethod
+    def name():
+        return "Mock"
