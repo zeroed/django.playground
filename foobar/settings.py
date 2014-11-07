@@ -175,3 +175,5 @@ LOGGING = {
         }
     }
 }
+
+ERROR_KEY = "ERROR"
